@@ -1,0 +1,22 @@
+Metadata-Version: 1.2
+Name: CPAT
+Version: 2.0.0
+Summary: CPAT (Coding Potential Assessment Tool)
+Home-page: http://rna-cpat.sourceforge.net/
+Author: Liguo Wang, Jung Hyun Park
+Author-email: wangliguo78@gmail.com, hj_park@pitt.edu
+License: GNU General Public License
+Description: CPAT is an alignment-free method to predict RNA coding potential using four sequence features.
+Keywords: RNA coding potential prediction,lncRNA,lincRNA,logsitic regression
+Platform: Linux
+Platform: MacOS
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Requires: cython (>=0.17)
+Requires-Python: >=3.5
