@@ -1,7 +1,7 @@
 docs_v2/*
 build/*
 dist/*
-test/CPAT_run_info.log
+test/*.log
 test/*.ORF_seqs.fa:
 test/*.ORF_prob.tsv
 test/*.ORF_prob.best.tsv
