@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-'''calculate coding potential'''
+"""
+Calculate Fickett TESTCODE score.
 
-# Fickett TESTCODE data
-# NAR 10(17) 5303-531
+Fickett JW. Recognition of protein coding regions in DNA sequences. Nucleic Acids Res.
+1982;10(17):5303-5318. doi:10.1093/nar/10.17.5303
+"""
 position_prob ={
 'A':[0.94,0.68,0.84,0.93,0.58,0.68,0.45,0.34,0.20,0.22],
 'C':[0.80,0.70,0.70,0.81,0.66,0.48,0.51,0.33,0.30,0.23],
@@ -48,11 +50,7 @@ def fickett_value(dna):
 	C_content = float(dna.count('C'))/total_base
 	G_content = float(dna.count('G'))/total_base
 	T_content = float(dna.count('T'))/total_base
-	#print "A content\t" + str(A_content)
-	#print "C content\t" + str(C_content)
-	#print "G content\t" + str(G_content)
-	#print "T content\t" + str(T_content)
-	
+
 	phase_0 = [dna[i] for i in range(0,len(dna)) if i % 3==0]
 	phase_1 = [dna[i] for i in range(0,len(dna)) if i % 3==1]
 	phase_2 = [dna[i] for i in range(0,len(dna)) if i % 3==2]
@@ -61,10 +59,6 @@ def fickett_value(dna):
 	C_position=max(phase_0.count('C'),phase_1.count('C'),phase_2.count('C'))/(min(phase_0.count('C'),phase_1.count('C'),phase_2.count('C')) +1.0)
 	G_position=max(phase_0.count('G'),phase_1.count('G'),phase_2.count('G'))/(min(phase_0.count('G'),phase_1.count('G'),phase_2.count('G')) +1.0)
 	T_position=max(phase_0.count('T'),phase_1.count('T'),phase_2.count('T'))/(min(phase_0.count('T'),phase_1.count('T'),phase_2.count('T')) +1.0)
-	#print "A position\t" + str(A_position)
-	#print "C position\t" + str(C_position)
-	#print "G position\t" + str(G_position)
-	#print "T position\t" + str(T_position)
 
 	
 	#for i (A_content,C_content,G_content,T_content):

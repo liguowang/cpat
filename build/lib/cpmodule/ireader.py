@@ -3,10 +3,12 @@ read compressed (.gz .bz) files
 """
 #!/usr/bin/env python
 # encoding: utf-8
-
+import sys
 import bz2
 import gzip
 import urllib
+from subprocess import Popen
+from subprocess import PIPE
 
 def nopen(f, mode="rb"):
 	if not isinstance(f, str):

@@ -8,4 +8,4 @@ recursive-include lib *.pxd
 recursive-include lib *.py
 recursive-include bin *
 recursive-include dat *
-recursive-include docs *
+recursive-include docs_v3 *

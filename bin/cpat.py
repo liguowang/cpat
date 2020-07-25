@@ -1,243 +1,238 @@
 #!/usr/bin/env python
+
 '''
 --------------------------------------
-CPAT: Coding Potential Assessing Tool
+Find the longest Open Reading Frame
 --------------------------------------
 '''
-
-#import built-in modules
-import os,sys
-
-import os,sys
-if sys.version_info[0] <3 or sys.version_info[1] < 5:
-	print("\nYou are using python" + str(sys.version_info[0]) + '.' + str(sys.version_info[1]) + " CPAT needs python3.5 or newer!\n", file=sys.stderr)
-	sys.exit()
-
-
-
-import string
-from optparse import OptionParser
-import warnings
-import string
-import collections
+import sys
+import logging
 import signal
-from numpy import mean,median,std,nansum
-import subprocess
+from textwrap import wrap
+from optparse import OptionParser
 
-#import 3rd party modules
-import pysam
-import numpy as np
-
-#import my own modules
 from cpmodule import fickett
-from cpmodule  import orf
-from cpmodule  import fasta
-#from cpmodule  import annoGene
 from cpmodule  import FrameKmer
 from cpmodule  import ireader
+from cpmodule import find_orfs
+from cpmodule.utils import *
 
 __author__ = "Liguo Wang"
-__contributor__="Liguo Wang, Hyun Jung Park, Wei Li"
-__copyright__ = "Copyright 2012, Mayo Clinic"
+__contributor__="Liguo Wang"
+__copyright__ = "Copyright 2020, Mayo Clinic"
 __credits__ = []
-__license__ = "GPL"
-__version__="2.0.0"
+__license__ = "GPLv2"
+__version__="3.0.0"
 __maintainer__ = "Liguo Wang"
 __email__ = "wangliguo78@gmail.com"
-__status__ = "Production"
+__status__ = "Production"		
 
 
-def coding_prediction(rdata,idata,outfile):
-	'''rdata stored the linear regression model, idata is data matrix containing features'''
-	RCMD = open(outfile + '.r','w')
-	print('load(\"%s\")' % (rdata), file=RCMD)
-	print('test <- read.table(file=\"%s\",sep="\\t",col.names=c("ID","mRNA","ORF","Fickett","Hexamer"))' % (idata), file=RCMD)
-	print('test$prob <- predict(mylogit,newdata=test,type="response")', file=RCMD)
-	print('attach(test)', file=RCMD)
-	print('output <- cbind("mRNA_size"=mRNA,"ORF_size"=ORF,"Fickett_score"=Fickett,"Hexamer_score"=Hexamer,"coding_prob"=test$prob)', file=RCMD)
-	print('write.table(output,file=\"%s\",quote=F,sep="\\t",row.names=ID)' % (outfile), file=RCMD)
-	RCMD.close()
-	try:
-		subprocess.call("Rscript " + outfile + '.r', shell=True)
-	except:
-		pass
-	#os.remove(idata)
-	
-def sum_bwfile(inbedline,bwfile):
-	'''retrieve sum of conservation score for all exons from input bed line'''
-	line = inbedline
-	bw_signal = []
-	try:
-		fields=line.rstrip('\r\n').split()
-		txStart=int(fields[1])
-		chrom=fields[0]
-		strand=fields[5]
-		geneName=fields[3]
-		score=fields[4]
-		exon_start=list(map(int,fields[11].rstrip(',').split(',')))
-		exon_start=list(map((lambda x: x + txStart),exon_start))
-		exon_end=list(map(int,fields[10].rstrip(',').split(',')))
-		exon_end=list(map((lambda x,y:x+y),exon_start,exon_end))
-	except:
-		print("Incorrect bed format.", file=sys.stderr)
-	try:
-		for st,end in zip(exon_start,exon_end):           
-			#print chrom +'\t'+ str(st) +'\t'+ str(end)    
-			bw_signal.extend(bwfile.get_as_array(chrom,st,end))
-			wigsum = nansum(bw_signal)
-	except:
-		wigsum = 0
-	wigsum=np.nan_to_num(wigsum)
-	return wigsum
-		
-		
-def bed_or_fasta(infile):
-	'''determine if the input file is bed or fasta format'''
-	format = "UNKNOWN"
-	for line in ireader.reader(infile):
-		#line = line.strip()
-		if line.startswith('#'):
-			continue
-		if line.startswith('>'):
-			format="FASTA"
-			return format
-		elif len(line.split())==12:
-			format='BED'
-			return format
-	return format
+def signal_handler(sig, frame):
+	logging.info('\nYou pressed Ctrl+C. Exit!')
+	sys.exit(0)
+signal.signal(signal.SIGINT, signal_handler)
 
-def index_fasta(infile):
-	'''index fasta file using samTools'''
-	if os.path.isfile(infile):
-		pass
-	else:
-		print("Indexing " + infile + ' ...', end=' ', file=sys.stderr)
-		pysam.faidx(infile)
-		print("Done!", file=sys.stderr)
-		
-def extract_feature_from_bed(inbed,refgenome,stt,stp,c_tab,g_tab):
-	'''extract features of sequence from bed line'''
-		
-	stt_coden = stt.strip().split(',')
-	stp_coden = stp.strip().split(',')
-	transtab = str.maketrans("ACGTNX","TGCANX")
-	mRNA_seq = ''
-	mRNA_size = 0
-	if inbed.strip():
-		try:
-			fields = inbed.split()
-			chrom = fields[0]
-			tx_start = int( fields[1] )
-			tx_end = int( fields[2] )
-			geneName = fields[3]
-			strand = fields[5].replace(" ","_")			
-			exon_num = int(fields[9])
-			exon_sizes = list(map(int,fields[10].rstrip(',\n').split(',')))
-			exon_starts = list(map(int, fields[11].rstrip( ',\n' ).split( ',' ) ))
-			exon_starts = list(map((lambda x: x + tx_start ), exon_starts))
-			exon_ends = list(map( int, fields[10].rstrip( ',\n' ).split( ',' ) ))
-			exon_ends = list(map((lambda x, y: x + y ), exon_starts, exon_ends));   
-			intron_starts = exon_ends[:-1]
-			intron_ends = exon_starts[1:]
-		except:
-			print("Wrong format!" + inbed, file=sys.stderr) 
-			return None
-		mRNA_size = sum(exon_sizes)
-		for st,end in zip(exon_starts, exon_ends):
-			exon_coord = chrom + ':' + str(st +1) + '-' + str(end)
-			tmp = pysam.faidx(refgenome,exon_coord)
-			mRNA_seq += ''.join([i.rstrip('\n\r') for i in tmp[1:]])
-		if strand =='-':
-			mRNA_seq = mRNA_seq.upper().translate(transtab)[::-1]				
-		tmp = orf.ORFFinder(mRNA_seq)
-		(CDS_size, CDS_frame, CDS_seq) = tmp.longest_orf(direction="+",start_coden=stt_coden, stop_coden=stp_coden)
-		fickett_score = fickett.fickett_value(CDS_seq)		
-		hexamer = FrameKmer.kmer_ratio(CDS_seq,6,3,c_tab,g_tab)
-		#print CDS_seq
-		return (geneName, mRNA_size, CDS_size, fickett_score,hexamer)
-
-def extract_feature_from_seq(seq,stt,stp,c_tab,g_tab):
-	'''extract features of sequence from fasta entry'''
-	
-	stt_coden = stt.strip().split(',')
-	stp_coden = stp.strip().split(',')
-	transtab = str.maketrans("ACGTNX","TGCANX")
-	mRNA_seq = seq.upper()
-	mRNA_size = len(seq)
-	tmp = orf.ORFFinder(mRNA_seq)
-	(CDS_size1, CDS_frame1, CDS_seq1) = tmp.longest_orf(direction="+",start_coden=stt_coden, stop_coden=stp_coden)
-	fickett_score1 = fickett.fickett_value(CDS_seq1)
-	hexamer = FrameKmer.kmer_ratio(CDS_seq1,6,3,c_tab,g_tab)
-	return (mRNA_size, CDS_size1, fickett_score1,hexamer)
-		
+			
 def main():
 	usage = "\n%prog  [options]"
 	parser = OptionParser(usage,version="%prog " + __version__)
-	parser.add_option("-g","--gene",action="store",dest="gene_file",help="RNAs either in BED or FASTA format: If this is BED format file, '-r/--ref' must also be specified; if this is RNA sequence file in FASTA format, ignore the ' r/--ref ' option. The input BED or FASTA file could be regular text file or compressed file (*.gz, *.bz2) or accessible url (http://, https://, ftp://).")
-	parser.add_option("-o","--outfile",action="store",dest="out_file",help="output file. Tab separated text file: geneID <tab> mRNA size <tab> ORF size <tab> Fickett Score <tab> Hexamer Score<tab>Coding Probability.")
+	parser.add_option("-g","--gene",action="store",type="string", dest="gene_file",help="Genomic sequnence(s) of RNA in FASTA or BED format. If this is a BED file, '-r/--ref' must also be specified. It is recommended to use *short* and *unique* sequence identifiers in this FASTA or BED file. The input  FASTA or BED file could be a regular text file or compressed file (*.gz, *.bz2) or accessible URL (http://, https://, ftp://).")
+	parser.add_option("-o","--outfile",action="store",type="string", dest="out_file",help="The prefix of output files.")
+	parser.add_option("-d","--logitModel",action="store",dest="logit_model",help="Prebuilt training model (Human, Mouse, Fly, Zebrafish). Run 'make_logitModel.py' to build logit model out of your own training datset.")
 	parser.add_option("-x","--hex",action="store",dest="hexamer_dat",help="Prebuilt hexamer frequency table (Human, Mouse, Fly, Zebrafish). Run 'make_hexamer_tab.py' to make this table out of your own training dataset.")
-	parser.add_option("-d","--logitModel",action="store",dest="logit_model",help="Prebuilt training model (Human, Mouse, Fly, Zebrafish). Run 'make_logitModel.py' to build logit model out of your own training datset")
 	parser.add_option("-r","--ref",action="store",dest="ref_genome",help="Reference genome sequences in FASTA format. Ignore this option if FASTA file was provided to '-g/--gene'. Reference genome file will be indexed automatically (produce *.fai file along with the original *.fa file within the same directory) if hasn't been done.")
-	parser.add_option("-s","--start",action="store",dest="start_codons",default='ATG',help="Start codon (DNA sequence, so use 'T' instead of 'U') used to define open reading frame (ORF). default=%default")
-	parser.add_option("-t","--stop",action="store",dest="stop_codons",default='TAG,TAA,TGA',help="Stop codon (DNA sequence, so use 'T' instead of 'U') used to define open reading frame (ORF). Multiple stop codons should be separated by ','. default=%default")
-	
+	parser.add_option("--antisense",action="store_true",dest="antisense",default=False,help="Also search for ORFs from the anti-sense strand. *Sense strand* (or coding strand) is DNA strand that carries the translatable code in the 5′ to 3′ direction. default=False (i.e. only search for ORFs from the sense strand)")
+	parser.add_option("--start",action="store",type="string", dest="start_codons",default='ATG',help="Start codon used by ORFs. Use 'T' instead of 'U'. default=%default")
+	parser.add_option("--stop",action="store",type="string", dest="stop_codons",default='TAG,TAA,TGA',help="Stop codons used by ORFs. Multiple stop codons should be separated by ','. Use 'T' instead of 'U'. default=%default")
+	parser.add_option("--min-orf",action="store",type="int", dest="min_orf_len",default=75,help="Minimum ORF length in nucleotides.  default=%default")
+	parser.add_option("--top-orf",action="store",type="int", dest="n_top_orf",default=5,help="Number of top ORF candidates. Many RNAs have dozens of possible ORFs, in most cases, the real ORF is ranked (by size) in the top several. To increase speed, we do not need to calculate \"Fickett\" score, \"Hexamer\" score and \"coding probability\" for all of them. default=%default")
+	parser.add_option("--width",action="store",type="int", dest="line_width",default=100,help="Line width of output ORFs in FASTA format.  default=%default")
+	parser.add_option("--log-file",action="store",type="string", dest="log_file",default='CPAT_run_info.log',help="Name of log file. default=\"%default\"")
+	parser.add_option("--best-orf",action="store",type="string", dest="mode",default='p',help="Criteria to select the best ORF: \"l\"=length, selection according to the \"ORF length\"; \"p\"=probability, selection according to the \"coding probability\". The \"p\" mode usually gives more accurate prediction than the \"l\"mode. default=\"%default\"")
 	(options,args)=parser.parse_args()
 	
-	#check input and output files
-	for file in ([options.gene_file,options.out_file,options.logit_model,options.hexamer_dat]):
+	for file in ([options.gene_file, options.hexamer_dat, options.logit_model, options.out_file]):
 		if not (file):
 			parser.print_help()
 			sys.exit(0)
+	
+	if options.line_width < 1:
+		sys.exit(0)
+	
+	if options.mode not in ["p", "l"]:
+		print ("Please specifiy either \"p\" or \"l\" to --best-orf.", file=sys.stderr)
+		sys.exit(0)	
+	
+	#logging to file
+	logging.basicConfig(filename='%s' % options.log_file, filemode='w',format = "%(asctime)s [%(levelname)s]  %(message)s",datefmt='%Y-%m-%d %I:%M:%S', level=logging.DEBUG)
+	#logging to console
+	logFormat = logging.Formatter("%(asctime)s [%(levelname)s]  %(message)s",datefmt='%Y-%m-%d %I:%M:%S')
+	consoleHandler = logging.StreamHandler()
+	consoleHandler.setFormatter(logFormat)
+	logging.getLogger().addHandler(consoleHandler)
+				  
+		
+	logging.info ("Running CPAT version %s..." % ( __version__))
+	start_codons = options.start_codons.replace(' ','').split(',')
+	stop_codons = options.stop_codons.replace(' ','').split(',')
+	
+	
+	SEQOUT = open(options.out_file + '.ORF_seqs.fa', 'w')
+	INFOUT = open(options.out_file + '.ORF_info.tsv', 'w')
+	NOORF = open(options.out_file + '.no_ORF.txt', 'w')
+	
+	logging.info ("Start codons used: [%s]" % ','.join(start_codons))
+	logging.info ("Stop codons used: [%s]" % ','.join(stop_codons))
+	
 	#build hexamer table from hexamer frequency file
-	coding={}
-	noncoding={}	
+	logging.info ("Reading %s" % options.hexamer_dat)
+	coding = {}
+	noncoding = {}
 	for line in open(options.hexamer_dat):
 		line = line.strip()
 		fields = line.split()
-		if fields[0] == 'hexamer':continue
+		if fields[0] == 'hexamer':
+			continue
 		coding[fields[0]] = float(fields[1])
 		noncoding[fields[0]] =  float(fields[2])
+                	
 	
-	count=0		
-	TMP = open(options.out_file + '.dat', 'w')
-
+	count = 0
+	logging.info ("Checking format of \"%s\"" % options.gene_file)
 	file_format = bed_or_fasta(options.gene_file)
 	if file_format == 'UNKNOWN':
-		print("\nError: unknown file format of '-g'\n", file=sys.stderr)
-		parser.print_help()
-		sys.exit(0)		
+		logging.error("Unknown file format:%s" % options.gene_file)
+		sys.exit(0)
+	
+	elif file_format == 'FASTA':
+		logging.info("Input gene file is in FASTA format")
+		if options.ref_genome:
+			logging.warning("\"%s\" is a sequence file. The reference genome file \"%s\" will be ignored." % (options.gene_file, options.ref_genome))
+
+		logging.info ("Searching for ORFs ...")
+		print ("\t".join(["ID", "mRNA","ORF_strand", "ORF_frame", "ORF_start", "ORF_end","ORF", "Fickett", "Hexamer" ]), file=INFOUT)	## do NOT change these labels, they are R variable names in the model. 
+		for name,seq in FrameKmer.seq_generator(options.gene_file):
+			count += 1
+			RNA_len = len(seq)
+			#ORF serial number, starting from 1
+			orf_sn = 1
+			tmp1 = find_orfs.ORFFinder(seq = seq, min_orf = options.min_orf_len)
+			ORFs = tmp1.orf_candidates(antisense = options.antisense, n_candidate = options.n_top_orf)
+			if len(ORFs) == 0:
+				logging.warning("No ORFs found for %s" % name)
+				print (name, file=NOORF)
+				continue
+			for orf in ORFs:
+				# (direction, frame_number+1, orf_start, orf_end, L, sequence)
+				orf_seq = orf[-1]
+				if orf[0] == '+':
+					orf[2] = orf[2] + 1	#change 0-based into 1-based to be consistent with NCBI ORFfinder output (https://www.ncbi.nlm.nih.gov/orffinder/)
+				elif orf[0] == '-':
+					orf[2] = RNA_len - (orf[2])
+					orf[3] = RNA_len - orf[3] + 1
+			
+				orf_id = name + '_ORF_' + str(orf_sn) + '\t' + str(RNA_len) + '\t' + '\t'.join([str(i) for i in orf[:-1]])
+			
+				fickett_score = fickett.fickett_value(orf_seq)
+				hexamer_score = FrameKmer.kmer_ratio(orf_seq,6,3,coding,noncoding)
+				print (orf_id + '\t' + str(fickett_score) + '\t' + str(hexamer_score), file=INFOUT)
+			
+				print (">" + orf_id, file=SEQOUT)
+				print ('\n'.join(wrap(orf_seq, width = options.line_width)), file=SEQOUT)
+				orf_sn += 1
+			print("%d sequences finished\r" % count, end=' ', file=sys.stderr)
+		print ("\n", file=sys.stderr)
+	
+	
 	elif file_format == 'BED':
-		print("Input gene file is in BED format", file=sys.stderr)
+		logging.info("Input gene file is in BED format")
 		if not options.ref_genome:
-			print("\nError: Reference genome file must be provided\n", file=sys.stderr)
+			logging.error("Reference genome file (-r/--ref) must be provided.")
 			parser.print_help()
-			sys.exit(0)
-		index_fasta(options.ref_genome)
+			sys.exit(0)	
+		
+		logging.info ("Searching for ORFs ...")
+		print ("\t".join(["ID", "mRNA","ORF_strand", "ORF_frame", "ORF_start", "ORF_end","ORF", "Fickett", "Hexamer" ]), file=INFOUT)	## do NOT change these labels, they are R variable names in the model. 
+		
+		index_fasta(options.ref_genome)	
 		
 		for line in ireader.reader(options.gene_file):
 			count +=1
 			if line.startswith('track'):continue
 			if line.startswith('#'):continue
-			if line.startswith('browser'):continue
-			#if not line.strip(): continue
-			(gene_id, mRNA_size, CDS_size, fickett_score,hexamer)=extract_feature_from_bed(line, options.ref_genome, options.start_codons, options.stop_codons,coding,noncoding)
+			if line.startswith('browser'):continue	
+			name,seq = seq_from_bed(line, options.ref_genome)
 			
-			print('\t'.join([str(i) for i in [gene_id, mRNA_size, CDS_size, fickett_score,hexamer]]), file=TMP)
-			print("%d genes finished\r" % count, end=' ', file=sys.stderr)
 			
-	elif file_format == 'FASTA':
-		if options.ref_genome:
-			print("Reference genome sequence [-r] and conservation score [-c] will be ignored when input genes are fasta format.", file=sys.stderr)
-		print("Input gene file is in FASTA format", file=sys.stderr)
-		#fa = fasta.Fasta(options.gene_file)
-		for sname,seq in FrameKmer.seq_generator(options.gene_file):
-			count +=1
-			#geneSeq = fa.getSeq(seqID = geneID)
-			(mRNA_size, CDS_size, fickett_score,hexamer) = extract_feature_from_seq(seq = seq, stt = options.start_codons,stp = options.stop_codons,c_tab=coding,g_tab=noncoding)
-			print('\t'.join(str(i) for i in (sname, mRNA_size, CDS_size, fickett_score,hexamer)), file=TMP)
-			print("%d genes finished\r" % count, end=' ', file=sys.stderr)
-	TMP.close()
-	coding_prediction(options.logit_model, options.out_file + '.dat', options.out_file)
+			RNA_len = len(seq)
+			#ORF serial number, starting from 1
+			orf_sn = 1
+			tmp1 = find_orfs.ORFFinder(seq = seq, min_orf = options.min_orf_len)
+			ORFs = tmp1.orf_candidates(antisense = options.antisense, n_candidate = options.n_top_orf)
+			if len(ORFs) == 0:
+				logging.warning("No ORFs found for %s" % name)
+				print (line, file=NOORF)
+				continue
+			for orf in ORFs:
+				# (direction, frame_number+1, orf_start, orf_end, L, sequence)
+				orf_seq = orf[-1]
+				if orf[0] == '+':
+					orf[2] = orf[2] + 1	#change 0-based into 1-based to be consistent with NCBI ORFfinder output (https://www.ncbi.nlm.nih.gov/orffinder/)
+				elif orf[0] == '-':
+					orf[2] = RNA_len - (orf[2])
+					orf[3] = RNA_len - orf[3] + 1
+			
+				orf_id = name + '_ORF_' + str(orf_sn) + '\t' + str(RNA_len) + '\t' + '\t'.join([str(i) for i in orf[:-1]])
+			
+				fickett_score = fickett.fickett_value(orf_seq)
+				hexamer_score = FrameKmer.kmer_ratio(orf_seq,6,3,coding,noncoding)
+				print (orf_id + '\t' + str(fickett_score) + '\t' + str(hexamer_score), file=INFOUT)
+			
+				print (">" + orf_id, file=SEQOUT)
+				print ('\n'.join(wrap(orf_seq, width = options.line_width)), file=SEQOUT)
+				orf_sn += 1
+			print("%d rows finished\r" % count, end=' ', file=sys.stderr)
+		print ("\n", file=sys.stderr)
+
 	
-if __name__ == '__main__':
-	main()
+	SEQOUT.close()
+	INFOUT.close()
+	
+	logging.info ("Calculate coding probability ...")
+	coding_prediction(options.logit_model, options.out_file + '.ORF_info.tsv', options.out_file)	#output options.out_file + '.ORF_prob.tsv'
+	
+	if options.mode == 'p':
+		logging.info ("Select ORF with the highest coding probability ...")
+		col_index = 9
+	elif options.mode == 'l':
+		logging.info ("Select the longest ORF ...")
+		col_index = 6
+		
+	BEST = open((options.out_file + '.ORF_prob.best.tsv'), 'w')
+	best_candidates = {}
+	for l in open((options.out_file + '.ORF_prob.tsv'), 'r'):
+		l = l.strip()
+		if l.startswith('ID'):
+			print ("seq_ID\tORF_ID\t" + l, file=BEST)
+			continue
+		f = l.split('\t')
+		seq_id = f[0].split('_ORF_')[0]
+		prob = float(f[col_index])
+		if seq_id not in best_candidates:
+			best_candidates[seq_id] = f
+		else:
+			if prob > float(best_candidates[seq_id][col_index]):
+				best_candidates[seq_id] = f
+	
+	for k,v in best_candidates.items():
+		print (k + '\t' + '\t'.join(v), file=BEST)
+	
+	BEST.close()		
+	logging.info ("Done!")
+	
+	finish_up(options.out_file, options.n_top_orf, options.min_orf_len)
+	
+		
+if __name__=='__main__':
+	main()	
