@@ -176,6 +176,7 @@ output files
 * output.ORF_prob.best.tsv: The information of the best ORF. This file is a subset of "output.ORF_prob.tsv"
 * output.no_ORF.txt: Sequence IDs or BED entries with no ORF found. Should be considered as non-coding.
 * output.r: Rscript file.
+* CPAT_run_info.log: log file
 
 
 Build hexamer table
