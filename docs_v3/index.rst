@@ -194,8 +194,6 @@ Options:
                         Noncoding sequences in fasta format
                         
 Example::
-
- $ cd CPAT-1.2.2/test  
  
  $ make_hexamer_tab.py -c Human_coding_transcripts_CDS.fa   -n Human_noncoding_transcripts_RNA.fa >Human_Hexamer.tsv
 
@@ -268,7 +266,6 @@ Options:
                         codons should be separated by ','. default=TAG,TAA,TGA
 Example::
 
- $ cd CPAT-1.2.2/test  
  
  $ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_mRNA.fa -n Human_noncoding_transcripts_RNA.fa -o Human
  
@@ -323,7 +320,7 @@ The command to run cpat.py is as below
 
 .. note::
    * You must specify :code:`--antisense`, otherwise, it will only search ORFs from the sense strand. 
-   * You also specify :code:`--top-orf` to a large number to report all the ORFs.
+   * You also specify :code:`--top-orf` to a big number to report all the ORFs.
    * The :code:`--min-orf` is set to 75 by default, same as `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_.
 
 
