@@ -1,9 +1,7 @@
 import sys
 class ORFFinder:
-	"""Find the longest ORF in a given sequence 
-	"seq" is a string, if "start" is not provided any codon can be the start of 
-	and ORF. If muliple ORFs have the longest length the first one encountered
-	is printed 
+	"""
+	Find the ORFs in a given sequence. 
 	"""
 	def __init__(self, seq, min_orf = 75):
 		self.seq = seq.upper()
@@ -12,21 +10,40 @@ class ORFFinder:
 		self.cutoff = min_orf	#minimum ORF size. 75 is the default value for NCBI ORF finder
   
 	def _reverse_comp(self):
+		"""
+		Reverse complement DNA nucleotides.
+		"""
 		swap = {"A":"T", "T":"A", "C":"G", "G":"C","N":"N","X":"X"}
 		return "".join(swap[b] for b in self.seq)[::-1]
   
 	def codons(self, frame):
-		""" A generator that yields DNA in one codon blocks 
-		"frame" counts for 0. This function yelids a tuple (triplet, index) with 
-		index relative to the original DNA sequence 
+		"""
+		A generator that yields DNA in one codon blocks.
 		"""
 		start = frame
 		while start + 3 <= len(self.seq):
 			yield (self.seq[start:start+3], start)
 			start += 3 
 
-	def run_one(self, frame_number, direction,start_coden, stop_coden):
-		""" Search in one reading frame """
+	def run_one(self, frame_number, direction, start_coden, stop_coden):
+		"""
+		Search in one reading frame
+		
+		Parameters
+		----------
+		frame_number : int
+			Reading frame. Must be 0, 1, or 2.
+		direction : str
+			Sense ('+') or antisense ('-'). Must be '+' or '-'. 
+		start_coden : list of string
+			Start coden(s).
+		stop_coden : list of string
+			Stop coden(s).
+		
+		Return
+		------
+			List of ORF candidates ([[direction, frame, ORF_start, ORF_end, ORF_length, ORF_seq],...])
+		"""
 		codon_gen = self.codons(frame_number)  
 		start_codens = start_coden
 		stop_codens = stop_coden   
@@ -35,8 +52,6 @@ class ORFFinder:
 				c , index = next(codon_gen)
 			except StopIteration:
 				break 
-			# Lots of conditions here: checks if we care about looking for start 
-			# codon then that codon is not a stop
 			if c in start_codens or not start_codens and c not in stop_codens:
 				orf_start = index  # we'll return the result as 0-indexed
 				end = False
@@ -55,13 +70,31 @@ class ORFFinder:
 						break
     
 	def orf_candidates(self, start_coden=['ATG'], stop_coden=['TAG','TAA','TGA'], antisense = False, n_candidate = 3):
+		"""
+		Find ORF candidates.
+		
+		Parameters
+		----------
+		start_coden : list of string
+			Start coden(s).
+		stop_coden : list of string
+			Stop coden(s).
+		antisense : bool
+			Whether to search ORFs from the antisense strand.
+		n_candidate : int
+			Number of candidate ORFs returned. 
+		
+		Return
+		------
+		List of list
+			List of ORF candidates ([[direction, frame, ORF_start, ORF_end, ORF_length, ORF_seq],...])
+		"""
     
-		#search for '+' strand
+		#search for ORFs from the '+' strand
 		for frame in range(3):
 			self.run_one(frame, '+', start_coden, stop_coden)
-    
+    	# Also search ORFs from the antisense strand
 		if antisense:
-			# Also search ORFs from antisense strand
 			try:
 				self.seq = self._reverse_comp()
 			except:
