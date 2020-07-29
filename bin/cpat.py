@@ -214,7 +214,7 @@ def main():
 	for l in open((options.out_file + '.ORF_prob.tsv'), 'r'):
 		l = l.strip()
 		if l.startswith('ID'):
-			print ("seq_ID\tORF_ID\t" + l, file=BEST)
+			print ("seq_ID\t" + l, file=BEST)
 			continue
 		f = l.split('\t')
 		seq_id = f[0].split('_ORF_')[0]
