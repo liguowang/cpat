@@ -8,7 +8,7 @@ Setup script for CPAT  -- Coding Potential Assessment Tool
 
 def main():
 	setup(  name = "CPAT",
-			version = "3.0.0",
+			version = "3.0.1",
 			py_modules = [ 'psyco_full' ],
 			python_requires='>=3.5',
 			packages = find_packages( 'lib' ),

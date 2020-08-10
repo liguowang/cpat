@@ -1,7 +1,7 @@
 Installation
 ==================
 
-Use pip to install CPAAT
+Use pip to install CPAT
 -----------------------------
 
 ::

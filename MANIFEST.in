@@ -6,6 +6,7 @@ include distribute_setup.py
 recursive-include lib *.pyx
 recursive-include lib *.pxd
 recursive-include lib *.py
+recursive-include test *
 recursive-include bin *
 recursive-include dat *
 recursive-include docs_v3 *
