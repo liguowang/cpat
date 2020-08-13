@@ -4,10 +4,7 @@ Make Hexamer frequency table
 ------------------------------------------------------------------------------------------'''
 
 import os,sys
-import string
 from optparse import OptionParser
-import warnings
-import string
 from cpmodule.FrameKmer import kmer_freq_file
 __author__ = "Liguo Wang"
 __contributor__="Liguo Wang, Hyun Jung Park, Wei Li"
@@ -28,23 +25,20 @@ def main():
 
 	if not options.coding_file and not options.noncoding_file:
 		parser.print_help()
-		sys.exit(0)		
+		sys.exit(0)
 	cod = kmer_freq_file(fastafile = options.coding_file, word_size = 6, step_size = 3, frame = 0)
 	noncod = kmer_freq_file(fastafile = options.noncoding_file, word_size = 6, step_size = 1, frame = 0)
-	
-	#for i,j in cod.items():
-	#	print str(i) + '\t' + str(j)
-	
+
 	cod_sum = 0.0
 	cod_sum += sum(cod.values())
 	noncod_sum = 0.0
 	noncod_sum += sum(noncod.values())
-	
+
 	print('hexamer' + '\t' + 'coding' + '\t' + 'noncoding')
 	for kmer in cod:
 		if 'N' in kmer:
 			continue
-		print(kmer + '\t' + str(float(cod[kmer]/cod_sum))  + '\t' + str(float(noncod[kmer]/noncod_sum))) 
+		print(kmer + '\t' + str(float(cod[kmer]/cod_sum))  + '\t' + str(float(noncod[kmer]/noncod_sum)))
 
 if __name__ == '__main__':
 	main()
