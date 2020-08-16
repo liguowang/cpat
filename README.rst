@@ -15,6 +15,5 @@ Use pip to install CPAT
 Documentation
 =============
 
-* http://rna-cpat.sourceforge.net/ (CPAT version v2.0)
 
 * https://cpat.readthedocs.io/en/latest/ (CPAT version v3.0)
