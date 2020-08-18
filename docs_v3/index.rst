@@ -32,7 +32,7 @@ Minor bug fixed regarding the output format.
 Version 3.0.0 has several major improvements:
 
 1) Report ORF information including "ORF frame", "ORF strand", "ORF start", "ORF end", "ORF sequence", and "coding probability".
-2) CPAT search for all ORF candidates. The number of ORF reported is controlled by :code:`--min-orf` and :code:`--top-orf`.
+2) Search for all ORF candidates. The number of ORF reported is controlled by :code:`--min-orf` and :code:`--top-orf`.
 3) The best ORF will be selected (controlled by :code:`--best-orf`) either by **ORF length** or **coding probability**.
 
 
