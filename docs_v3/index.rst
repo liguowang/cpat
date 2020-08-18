@@ -29,11 +29,14 @@ Minor bug fixed regarding the output format.
 
 **CPAT v3.0.0**
 
-Version 3.0.0 has several major improvements:
+For many transcripts, the longest ORF may not be the real ORF. For example, in human genome,
+the 2nd longest ORF of NM_198086 is the real ORF, and the 3rd longest ORF of NM_030915 is the
+real ORF. Version 3.0.0 is released to address this problem. 
 
-1) Report ORF information including "ORF frame", "ORF strand", "ORF start", "ORF end", "ORF sequence", and "coding probability".
+1) If model is provided, CPAT can be used as an ORFfinder. It gives exactly the same results as `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_ does. 
 2) Search for all ORF candidates. The number of ORF reported is controlled by :code:`--min-orf` and :code:`--top-orf`.
-3) The best ORF will be selected (controlled by :code:`--best-orf`) either by **ORF length** or **coding probability**.
+3) In addition to basic ORF information ("ORF frame", "ORF strand", "ORF start", "ORF end", "ORF sequence"), it also reports "coding probability" for each ORF. 
+4) The best ORF will be selected (controlled by :code:`--best-orf`) either by **ORF length** or **coding probability**.
 
 
 Introduction
@@ -49,6 +52,7 @@ from a set of known protein-coding genes and another set of non-coding genes.
 
 CPAT will then builds a `logistic regression <https://en.wikipedia.org/wiki/Logistic_regression>`_ model using these 4 features as predictor variables and the "protein-coding status" as 
 the response variable. After evaluating the performance and determining the probability cutoff, the model can be used to predict new RNA sequences. 
+
 
 Installation
 =============
