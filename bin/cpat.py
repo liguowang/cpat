@@ -22,7 +22,7 @@ __contributor__="Liguo Wang"
 __copyright__ = "Copyright 2020, Mayo Clinic"
 __credits__ = []
 __license__ = "GPLv2"
-__version__="3.0.2"
+__version__="3.0.3"
 __maintainer__ = "Liguo Wang"
 __email__ = "wangliguo78@gmail.com"
 __status__ = "Production"
@@ -117,7 +117,7 @@ def main():
 			#ORF serial number, starting from 1
 			orf_sn = 1
 			tmp1 = find_orfs.ORFFinder(seq = seq, min_orf = options.min_orf_len)
-			ORFs = tmp1.orf_candidates(antisense = options.antisense, n_candidate = options.n_top_orf)
+			ORFs = tmp1.orf_candidates(antisense = options.antisense, n_candidate = options.n_top_orf, start_coden = start_codons, stop_coden = stop_codons)
 			if len(ORFs) == 0:
 				logging.warning("No ORFs found for %s" % name)
 				print (name, file=NOORF)
@@ -168,7 +168,7 @@ def main():
 			#ORF serial number, starting from 1
 			orf_sn = 1
 			tmp1 = find_orfs.ORFFinder(seq = seq, min_orf = options.min_orf_len)
-			ORFs = tmp1.orf_candidates(antisense = options.antisense, n_candidate = options.n_top_orf)
+			ORFs = tmp1.orf_candidates(antisense = options.antisense, n_candidate = options.n_top_orf, start_coden = start_codons, stop_coden = stop_codons)
 			if len(ORFs) == 0:
 				logging.warning("No ORFs found for %s" % name)
 				print (line, file=NOORF)
