@@ -19,7 +19,11 @@
 Release history
 ================
 
-**CPAT v3.0.2**
+**CPAT v3.0.3** (03/08/2021)
+
+Update "cpat.py" to handle alternative start codens. 
+
+**CPAT v3.0.2** (08/17/2020)
 
 Update "make_logitModel.py" to make it compatible with "cpat.py".
 

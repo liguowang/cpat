@@ -1,18 +1,19 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Release history &#8212; CPAT 3.0.0 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -23,7 +24,8 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="nav-item nav-item-0"><a href="#">CPAT 3.0.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">CPAT 3.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Release history</a></li> 
       </ul>
     </div>  
 
@@ -42,11 +44,20 @@ and older versions, please go to <a class="reference external" href="http://rna-
 </div>
 <div class="section" id="release-history">
 <h1>Release history<a class="headerlink" href="#release-history" title="Permalink to this headline">¶</a></h1>
+<p><strong>CPAT v3.0.3</strong> (03/08/2021)</p>
+<p>Update “cpat.py” to handle alternative start codens.</p>
+<p><strong>CPAT v3.0.2</strong> (08/17/2020)</p>
+<p>Update “make_logitModel.py” to make it compatible with “cpat.py”.</p>
+<p><strong>CPAT v3.0.1</strong></p>
+<p>Minor bug fixed regarding the output format.</p>
 <p><strong>CPAT v3.0.0</strong></p>
-<p>Version 3.0.0 has several major improvements:</p>
+<p>For many transcripts, the longest ORF may not be the real ORF. For example, in human genome,
+the 2nd longest ORF of NM_198086 is the real ORF, and the 3rd longest ORF of NM_030915 is the
+real ORF. Version 3.0.0 is released to address this problem.</p>
 <ol class="arabic simple">
-<li><p>Report ORF information including “ORF frame”, “ORF strand”, “ORF start”, “ORF end”, “ORF sequence”, and “coding probability”.</p></li>
-<li><p>CPAT search for all ORF candidates. The number of ORF reported is controlled by <code class="code docutils literal notranslate"><span class="pre">--min-orf</span></code> and <code class="code docutils literal notranslate"><span class="pre">--top-orf</span></code>.</p></li>
+<li><p>If model is provided, CPAT can be used as an ORFfinder. It gives exactly the same results as <a class="reference external" href="https://www.ncbi.nlm.nih.gov/orffinder/">NCBI ORFfinder</a> does.</p></li>
+<li><p>Search for all ORF candidates. The number of ORF reported is controlled by <code class="code docutils literal notranslate"><span class="pre">--min-orf</span></code> and <code class="code docutils literal notranslate"><span class="pre">--top-orf</span></code>.</p></li>
+<li><p>In addition to basic ORF information (“ORF frame”, “ORF strand”, “ORF start”, “ORF end”, “ORF sequence”), it also reports “coding probability” for each ORF.</p></li>
 <li><p>The best ORF will be selected (controlled by <code class="code docutils literal notranslate"><span class="pre">--best-orf</span></code>) either by <strong>ORF length</strong> or <strong>coding probability</strong>.</p></li>
 </ol>
 </div>
@@ -121,8 +132,8 @@ or <a class="reference external" href="http://en.wikipedia.org/wiki/FASTA_format
 </div>
 <div class="section" id="command-line-options">
 <h2>Command line options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><dl class="option-list">
+<dl>
+<dt>Options:</dt><dd><dl class="option-list">
 <dt><kbd><span class="option">--version</span></kbd></dt>
 <dd><p>show program’s version number and exit</p>
 </dd>
@@ -130,33 +141,39 @@ or <a class="reference external" href="http://en.wikipedia.org/wiki/FASTA_format
 <dd><p>show this help message and exit</p>
 </dd>
 <dt><kbd><span class="option">-g <var>GENE_FILE</var></span>, <span class="option">--gene=<var>GENE_FILE</var></span></kbd></dt>
-<dd><p>Genomic sequnence(s) of RNA in FASTA or BED format. If
-this is a BED file, ‘-r/–ref’ must also be specified.
-It is recommended to use <em>short</em> and <em>unique</em> sequence
-identifiers in this FASTA or BED file. The input
-FASTA or BED file could be a regular text file or
-compressed file (<a href="#id16"><span class="problematic" id="id17">*</span></a>.gz, <a href="#id18"><span class="problematic" id="id19">*</span></a>.bz2) or accessible URL
+<dd><p>Genomic sequnence(s) of RNA in FASTA
+(<a class="reference external" href="https://en.wikipedia.org/wiki/FASTA_format">https://en.wikipedia.org/wiki/FASTA_format</a>) or
+standard 12-column BED
+(<a class="reference external" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">https://genome.ucsc.edu/FAQ/FAQformat.html#format1</a>)
+format. It is recommended to use <em>short</em> and <em>unique</em>
+sequence identifiers (such as Ensembl transcript id)
+in FASTA and BED file. If this is a BED file,
+reference genome (‘-r/–ref’) should be specified. The
+input FASTA or BED file could be a regular text file
+or compressed file (<a href="#id16"><span class="problematic" id="id17">*</span></a>.gz, <a href="#id18"><span class="problematic" id="id19">*</span></a>.bz2) or accessible URL
 (<a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a>, <a class="reference external" href="ftp://">ftp://</a>).</p>
 </dd>
 <dt><kbd><span class="option">-o <var>OUT_FILE</var></span>, <span class="option">--outfile=<var>OUT_FILE</var></span></kbd></dt>
 <dd><p>The prefix of output files.</p>
 </dd>
 <dt><kbd><span class="option">-d <var>LOGIT_MODEL</var></span>, <span class="option">--logitModel=<var>LOGIT_MODEL</var></span></kbd></dt>
-<dd><p>Prebuilt training model (Human, Mouse, Fly,
-Zebrafish). Run ‘make_logitModel.py’ to build logit
+<dd><p>Logistic regression model. The prebuilt models for
+Human, Mouse, Fly, Zebrafish are availablel. Run
+‘make_logitModel.py’ to build logistic regression
 model out of your own training datset.</p>
 </dd>
 <dt><kbd><span class="option">-x <var>HEXAMER_DAT</var></span>, <span class="option">--hex=<var>HEXAMER_DAT</var></span></kbd></dt>
-<dd><p>Prebuilt hexamer frequency table (Human, Mouse, Fly,
-Zebrafish). Run ‘make_hexamer_tab.py’ to make this
-table out of your own training dataset.</p>
+<dd><p>The hexamer frequency table. The prebuilt tables for
+Human, Mouse, Fly, Zebrafish are availablel. Run
+‘make_hexamer_tab.py’ to make this table out of your
+own training dataset.</p>
 </dd>
 <dt><kbd><span class="option">-r <var>REF_GENOME</var></span>, <span class="option">--ref=<var>REF_GENOME</var></span></kbd></dt>
-<dd><p>Reference genome sequences in FASTA format. Ignore
-this option if FASTA file was provided to ‘-g/–gene’.
-Reference genome file will be indexed automatically
-(produce <a href="#id20"><span class="problematic" id="id21">*</span></a>.fai file along with the original <a href="#id22"><span class="problematic" id="id23">*</span></a>.fa file
-within the same directory) if hasn’t been done.</p>
+<dd><p>Reference genome sequences in FASTA format. Reference
+genome file will be indexed automatically (produce
+<a href="#id20"><span class="problematic" id="id21">*</span></a>.fai file along with the original <a href="#id22"><span class="problematic" id="id23">*</span></a>.fa file within
+the same directory) if hasn’t been done. Ignore this
+option if FASTA file was provided to ‘-g/–gene’.</p>
 </dd>
 <dt><kbd><span class="option">--antisense</span></kbd></dt>
 <dd><p>Also search for ORFs from the anti-sense strand.
@@ -178,10 +195,10 @@ default=TAG,TAA,TGA</p>
 <dd><p>Minimum ORF length in nucleotides.  default=75</p>
 </dd>
 <dt><kbd><span class="option">--top-orf=<var>N_TOP_ORF</var></span></kbd></dt>
-<dd><p>Number of top ORF candidates. Many RNAs have dozens of
+<dd><p>Number of ORF candidates. Many RNAs have dozens of
 possible ORFs, in most cases, the real ORF is ranked
 (by size) in the top several. To increase speed, we do
-not need to calculate “Fickett” score, “Hexamer” score
+not need to calculate “Fickett score”, “Hexamer score”
 and “coding probability” for all of them. default=5</p>
 </dd>
 <dt><kbd><span class="option">--width=<var>LINE_WIDTH</var></span></kbd></dt>
@@ -194,12 +211,16 @@ default=100</p>
 <dt><kbd><span class="option">--best-orf=<var>MODE</var></span></kbd></dt>
 <dd><p>Criteria to select the best ORF: “l”=length, selection
 according to the “ORF length”; “p”=probability,
-selection according to the “coding probability”. The
-“p” mode usually gives more accurate prediction than
-the “l”mode. default=”p”</p>
+selection according to the “coding probability”.
+default=”p”</p>
+</dd>
+<dt><kbd><span class="option">--verbose</span></kbd></dt>
+<dd><p>Logical to determine if detailed running information
+is printed to screen.</p>
 </dd>
 </dl>
-</div></blockquote>
+</dd>
+</dl>
 </div>
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
@@ -220,6 +241,7 @@ the “l”mode. default=”p”</p>
 <li><p>output.ORF_prob.best.tsv: The information of the best ORF. This file is a subset of “output.ORF_prob.tsv”</p></li>
 <li><p>output.no_ORF.txt: Sequence IDs or BED entries with no ORF found. Should be considered as non-coding.</p></li>
 <li><p>output.r: Rscript file.</p></li>
+<li><p>CPAT_run_info.log: log file</p></li>
 </ul>
 </div>
 </div>
@@ -246,9 +268,7 @@ User can get CDS sequence of a bed file using <a class="reference external" href
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd CPAT-1.2.2/test
-
-$ make_hexamer_tab.py -c Human_coding_transcripts_CDS.fa   -n Human_noncoding_transcripts_RNA.fa &gt;Human_Hexamer.tsv
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make_hexamer_tab.py -c Human_coding_transcripts_CDS.fa   -n Human_noncoding_transcripts_RNA.fa &gt;Human_Hexamer.tsv
 
 $ head Human_Hexamer.tsv
 
@@ -285,57 +305,78 @@ CACCCC 0.000328479350276       0.000342582352322
 <dd><p>show this help message and exit</p>
 </dd>
 <dt><kbd><span class="option">-c <var>CODING_FILE</var></span>, <span class="option">--cgene=<var>CODING_FILE</var></span></kbd></dt>
-<dd><p>Protein coding transcripts (used to build logit model)
-either in BED format or mRNA sequences in FASTA
-format: If this is BED format file, ‘-r’ must be
-specified; if this is mRNA sequence file in FASTA
-format, ignore the ‘-r’ option. The input BED or FASTA
-file could be regular text file or compressed file
-(<a href="#id25"><span class="problematic" id="id26">*</span></a>.gz, <a href="#id27"><span class="problematic" id="id28">*</span></a>.bz2) or accessible url. NOTE: transcript ID
-should be unique.</p>
+<dd><p>Genomic sequnences of protein-coding RNAs in FASTA
+(<a class="reference external" href="https://en.wikipedia.org/wiki/FASTA_format">https://en.wikipedia.org/wiki/FASTA_format</a>) or
+standard 12-column BED
+(<a class="reference external" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">https://genome.ucsc.edu/FAQ/FAQformat.html#format1</a>)
+format. It is recommended to use <em>short</em> and <em>unique</em>
+sequence identifiers (such as Ensembl transcript id)
+in FASTA and BED file. The input FASTA or BED file
+could be a regular text file or compressed file (<a href="#id25"><span class="problematic" id="id26">*</span></a>.gz,
+<a href="#id27"><span class="problematic" id="id28">*</span></a>.bz2) or accessible URL (<a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a>, <a class="reference external" href="ftp://">ftp://</a>).
+When BED file is provided, use the ORF defined in the
+BED file (the 7th and 8th columns in BED file define
+the positions of ‘start codon, and ‘stop codon’,
+respectively). When FASTA file is provided, searching
+for the longet ORF. For well annotated genome, we
+recommend using BED file as input because the longest
+ORF predicted from RNA sequence might not be the real
+ORF. If this is a BED file, reference genome
+(‘-r/–ref’) should be specified.</p>
 </dd>
 <dt><kbd><span class="option">-n <var>NONCODING_FILE</var></span>, <span class="option">--ngene=<var>NONCODING_FILE</var></span></kbd></dt>
-<dd><p>Non protein coding transcripts (used to build logit
-model) either in BED format or mRNA sequences in FASTA
-format: If this is BED format file, ‘-r’ must be
-specified; if this is mRNA sequence file in FASTA
-format, ignore the ‘-r’ option. The input BED or FASTA
-file could be regular text file or compressed file
-(<a href="#id29"><span class="problematic" id="id30">*</span></a>.gz, <a href="#id31"><span class="problematic" id="id32">*</span></a>.bz2) or accessible url.  NOTE: transcript ID
-should be unique.</p>
+<dd><p>Genomic sequences of non-coding RNAs in FASTA
+(<a class="reference external" href="https://en.wikipedia.org/wiki/FASTA_format">https://en.wikipedia.org/wiki/FASTA_format</a>) or
+standard 12-column BED
+(<a class="reference external" href="https://genome.ucsc.edu/FAQ/FAQformat.html#format1">https://genome.ucsc.edu/FAQ/FAQformat.html#format1</a>)
+format. It is recommended to use <em>short</em> and <em>unique</em>
+sequence identifiers (such as Ensembl transcript id)
+in FASTA and BED file. The input FASTA or BED file
+could be a regular text file or compressed file (<a href="#id29"><span class="problematic" id="id30">*</span></a>.gz,
+<a href="#id31"><span class="problematic" id="id32">*</span></a>.bz2) or accessible URL (<a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a>, <a class="reference external" href="ftp://">ftp://</a>).
+If this is a BED file, reference genome (‘-r/–ref’)
+should be specified.</p>
 </dd>
 <dt><kbd><span class="option">-o <var>OUT_FILE</var></span>, <span class="option">--outfile=<var>OUT_FILE</var></span></kbd></dt>
-<dd><p>output prefix.</p>
+<dd><p>The prefix of output files.</p>
 </dd>
 <dt><kbd><span class="option">-x <var>HEXAMER_DAT</var></span>, <span class="option">--hex=<var>HEXAMER_DAT</var></span></kbd></dt>
-<dd><p>Prebuilt hexamer frequency table (Human, Mouse, Fly,
-Zebrafish). Run ‘make_hexamer_tab.py’ to generate this
-table.</p>
+<dd><p>Hexamer frequency table. CPAT has prebuilt hexamer
+frequency tables for Human, Mouse, Fly, Zebrafish. Run
+‘make_hexamer_tab.py’ to generate this table.</p>
 </dd>
 <dt><kbd><span class="option">-r <var>REF_GENOME</var></span>, <span class="option">--ref=<var>REF_GENOME</var></span></kbd></dt>
 <dd><p>Reference genome sequences in FASTA format. Ignore
 this option if mRNA sequences file was provided to
 ‘-g’. Reference genome file will be indexed
-automatically (produce <a href="#id33"><span class="problematic" id="id34">*</span></a>.fai file along with the
-original <a href="#id35"><span class="problematic" id="id36">*</span></a>.fa file within the same directory) if
-hasn’t been done.</p>
+automatically if the index file  <a href="#id33"><span class="problematic" id="id34">*</span></a>.fai) does not
+exist.</p>
 </dd>
 <dt><kbd><span class="option">-s <var>START_CODONS</var></span>, <span class="option">--start=<var>START_CODONS</var></span></kbd></dt>
-<dd><p>Start codon (DNA sequence, so use ‘T’ instead of ‘U’)
-used to define open reading frame (ORF). default=ATG</p>
+<dd><p>Start codon (use ‘T’ instead of ‘U’) used to define
+the start of open reading frame (ORF). default=ATG</p>
 </dd>
 <dt><kbd><span class="option">-t <var>STOP_CODONS</var></span>, <span class="option">--stop=<var>STOP_CODONS</var></span></kbd></dt>
-<dd><p>Stop codon (DNA sequence, so use ‘T’ instead of ‘U’)
-used to define open reading frame (ORF). Multiple stop
-codons should be separated by ‘,’. default=TAG,TAA,TGA</p>
+<dd><p>Stop codon (use ‘T’ instead of ‘U’) used to define the
+end of open reading frame (ORF). Multiple stop codons
+are separated by ‘,’. default=TAG,TAA,TGA</p>
+</dd>
+<dt><kbd><span class="option">--min-orf=<var>MIN_ORF_LEN</var></span></kbd></dt>
+<dd><p>Minimum ORF length in nucleotides.  default=30</p>
+</dd>
+<dt><kbd><span class="option">--log-file=<var>LOG_FILE</var></span></kbd></dt>
+<dd><p>Name of log file.
+default=”make_logitModel_run_info.log”</p>
+</dd>
+<dt><kbd><span class="option">--verbose</span></kbd></dt>
+<dd><p>Logical to determine if detailed running information
+is printed to screen.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd CPAT-1.2.2/test
-
-$ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_mRNA.fa -n Human_noncoding_transcripts_RNA.fa -o Human
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_mRNA.fa -n Human_noncoding_transcripts_RNA.fa -o Human
 
 Process protein coding transcripts: Human_coding_transcripts_mRNA.fa
 Input gene file is in FASTA format
@@ -389,7 +430,7 @@ $ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_hg19.bed 
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>You must specify <code class="code docutils literal notranslate"><span class="pre">--antisense</span></code>, otherwise, it will only search ORFs from the sense strand.</p></li>
-<li><p>You also specify <code class="code docutils literal notranslate"><span class="pre">--top-orf</span></code> to a large number to report all the ORFs.</p></li>
+<li><p>You also specify <code class="code docutils literal notranslate"><span class="pre">--top-orf</span></code> to a big number to report all the ORFs.</p></li>
 <li><p>The <code class="code docutils literal notranslate"><span class="pre">--min-orf</span></code> is set to 75 by default, same as <a class="reference external" href="https://www.ncbi.nlm.nih.gov/orffinder/">NCBI ORFfinder</a>.</p></li>
 </ul>
 </div>
@@ -475,10 +516,8 @@ null device
 <div class="section" id="how-to-prepare-training-dataset">
 <h1>How to prepare training dataset<a class="headerlink" href="#how-to-prepare-training-dataset" title="Permalink to this headline">¶</a></h1>
 <p>We prebuild hexamer tables and logit models for <a class="reference external" href="https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/">human, mouse, fly and zebrafish</a>.
-If you want to run CPAT for other species, you need to prepare “coding sequences” and “noncoding sequences” as training data. These two files are required when you run <em>make_hexamer_tab.py</em> and <em>make_logitModel.py</em>.</p>
+If you want to run CPAT for other species, you need to prepare your own training data. These two files are required when you run <em>make_hexamer_tab.py</em> and <em>make_logitModel.py</em>.</p>
 <ul class="simple">
-<li><p><strong>Coding sequences</strong>: the whole CDS part of the mRNA. In other words, each CDS sequences should start with <strong>start codon</strong> and end with <strong>stop coden</strong>. As you expected, the length of each CDS should be <strong>an integer multiple of 3</strong>. You should reverse-compliment the CDS sequence if the mRNA sequence is extracted from  the genome and the gene is located on ‘-‘ strand.</p></li>
-<li><p><strong>Noncoding sequences</strong>: It’s better to use those <strong>annotated (known) noncoding genes</strong>, rather than the “noncoding parts” of protein coding genes such as 3’UTR and 5’UTR.</p></li>
 <li><p>It’s better to have balanced training dataset (i.e. the number of coding sequences is roughly equal to the number of noncoding sequences).</p></li>
 <li><p>If the genome of the species you are working on is NOT well annotated and does not have enough “coding” and “noncoding” genes to build the training data, you could build your model using data from other species that is evolutionary close to the species you are working on.</p></li>
 </ul>
@@ -532,11 +571,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 <h1>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p>Liguo Wang: wang.liguo AT mayo.edu</p></li>
-<li><p>Hyun Jung Park: hjpark AT bcm.edu</p></li>
+<li><p>Wei Li: wei.li AT uci.edu</p></li>
 </ul>
 </div>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -592,7 +632,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -603,12 +643,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="nav-item nav-item-0"><a href="#">CPAT 3.0.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="#">CPAT 3.0.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Release history</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2020, Liguo Wang.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
     </div>
   </body>
 </html>
