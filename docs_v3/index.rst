@@ -82,10 +82,10 @@ install CPAT using pip3
    * User need to download prebuilt `logit model and hexamer table  <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/>`_ for human, mouse, zebrafish and fly. For other species, we provide scripts to build these models (see below).
 
 
-Run `CPAT online <https://wlcb.oit.uci.edu/cpat/>`_
-=========================================================
+Run CPAT online
+================
 
-`CPAT webserver <https://wlcb.oit.uci.edu/cpat/>`_
+`CPAT webserver <https://wlcb.oit.uci.edu/cpat/>`_ (Our new server is hosted by Dr Wei Li's lab @ University of California Irvine)
 
 **Step1: Upload data to CPAT server. There are 3 different ways to uploada**
 
@@ -100,6 +100,7 @@ Run `CPAT online <https://wlcb.oit.uci.edu/cpat/>`_
 .. note::
    * This web server only supports Human (hg19), Mouse (mm9 and mm10), Fly (dm3) and Zebrafish (Zv9).
    * When input file is BED format, the reference genome is required and the assembly version is important.
+   * When input file is FASTA format, the reference genome and the assembly version is ignored.
 
 
 Run CPAT on local computer
