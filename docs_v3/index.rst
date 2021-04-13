@@ -385,7 +385,7 @@ to `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_ web server, you w
 
 CPAT also provides *Fickett's TESTCODE score*, *Hexamer score* and *coding probability* for each ORF, to help you determine which one is more likely the *real* ORF.
 For most mRNAs, the largest ORF is also the most likely one, but not always. In this particular example, ORF_4 is the most likely one to code for protein since it has
-the highest coding probability. This can be demonstrated by BLATing the 8 ORF sequences to the reference genome.
+the highest coding probability (plese note, ORF_4 is not the largest ORF of NM_013387.4). This can be demonstrated by BLATing the 8 ORF sequences to the reference genome.
 
 .. figure:: _static/UQCR10.jpg
    :height: 180 px
