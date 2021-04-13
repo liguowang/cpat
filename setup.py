@@ -1,6 +1,6 @@
 import sys, os, platform, glob
-from distutils.core import setup
 from setuptools import *
+from distutils.core import setup
 
 """
 Setup script for CPAT  -- Coding Potential Assessment Tool
