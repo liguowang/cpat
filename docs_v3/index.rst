@@ -85,7 +85,7 @@ install CPAT using pip3
 Run CPAT online
 ================
 
-`CPAT webserver <https://wlcb.oit.uci.edu/cpat/>`_ (Our new server is hosted by Dr Wei Li's lab @ University of California Irvine)
+`https://wlcb.oit.uci.edu/cpat <https://wlcb.oit.uci.edu/cpat/>`_ is hosted by Dr Wei Li's lab @ University of California Irvine.
 
 **Step1: Upload data to CPAT server. There are 3 different ways to uploada**
 
