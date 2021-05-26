@@ -44,6 +44,8 @@ and older versions, please go to <a class="reference external" href="http://rna-
 </div>
 <div class="section" id="release-history">
 <h1>Release history<a class="headerlink" href="#release-history" title="Permalink to this headline">¶</a></h1>
+<p><strong>CPAT v3.0.4</strong> (05/26/2021)</p>
+<p>Fix bug to read remote file for Python3.</p>
 <p><strong>CPAT v3.0.3</strong> (03/08/2021)</p>
 <p>Update “cpat.py” to handle alternative start codens.</p>
 <p><strong>CPAT v3.0.2</strong> (08/17/2020)</p>
@@ -128,7 +130,7 @@ or <a class="reference external" href="http://en.wikipedia.org/wiki/FASTA_format
 <ul class="simple">
 <li><p><a class="reference external" href="http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.bed">BED</a> format file (regular text or compressed). <a class="reference external" href="http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.bed">BED</a> file should be in standard 12-column format.</p></li>
 <li><p><a class="reference external" href="http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.mRNA.fa">FASTA</a> format file (regular text or compressed)</p></li>
-<li><p>a URL pointing to data that are saved remotely (data could be either BED or FASTA, either regular text or compressed file). <a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a> and <a class="reference external" href="ftp://">ftp://</a> are supported.</p></li>
+<li><p>a URL pointing to data that are saved remotely (data could be either BED or FASTA, either regular text or compressed file). <a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a> and <a class="reference external" href="ftp://">ftp://</a> are supported. A remote file cannot be compressed.</p></li>
 </ul>
 </div>
 <div class="section" id="command-line-options">
@@ -229,8 +231,12 @@ is printed to screen.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA.fa -o output1
 </pre></div>
 </div>
+<p>Use remote FASTA file as input:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g https://data.cyverse.org/dav-anon/iplant/home/liguow/CPAT/Human_test_coding_mRNA.fa -o output2
+</pre></div>
+</div>
 <p>Use BED file as input. ‘-r’ is required:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA_hg19.bed -r hg19.fa -o output2
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA_hg19.bed -r hg19.fa -o output3
 </pre></div>
 </div>
 </div>

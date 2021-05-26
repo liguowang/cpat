@@ -19,6 +19,10 @@
 Release history
 ================
 
+**CPAT v3.0.4** (05/26/2021)
+
+Fix bug to read remote file for Python3.  
+
 **CPAT v3.0.3** (03/08/2021)
 
 Update "cpat.py" to handle alternative start codens. 
@@ -115,7 +119,7 @@ or `FASTA <http://en.wikipedia.org/wiki/FASTA_format>`_ format. If in BED format
 
 * `BED <http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.bed>`_ format file (regular text or compressed). `BED <http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.bed>`_ file should be in standard 12-column format.
 * `FASTA <http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.mRNA.fa>`_ format file (regular text or compressed)
-* a URL pointing to data that are saved remotely (data could be either BED or FASTA, either regular text or compressed file). http://, https:// and ftp:// are supported.
+* a URL pointing to data that are saved remotely (data could be either BED or FASTA, either regular text or compressed file). http://, https:// and ftp:// are supported. A remote file cannot be compressed.
 
 Command line options
 --------------------
@@ -186,10 +190,14 @@ Examples
 Use FASTA file as input::
 
  $ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA.fa -o output1
- 
+
+Use remote FASTA file as input::
+
+ $ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g https://data.cyverse.org/dav-anon/iplant/home/liguow/CPAT/Human_test_coding_mRNA.fa -o output2
+
 Use BED file as input. '-r' is required::
 
- $ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA_hg19.bed -r hg19.fa -o output2
+ $ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA_hg19.bed -r hg19.fa -o output3
 
 output files
 -------------

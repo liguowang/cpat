@@ -22,7 +22,7 @@ __contributor__="Liguo Wang"
 __copyright__ = "Copyright 2020, Mayo Clinic"
 __credits__ = []
 __license__ = "GPLv2"
-__version__="3.0.3"
+__version__="3.0.4"
 __maintainer__ = "Liguo Wang"
 __email__ = "wangliguo78@gmail.com"
 __status__ = "Production"
@@ -32,7 +32,7 @@ __status__ = "Production"
 def main():
 	usage = "\n%prog  [options]"
 	parser = OptionParser(usage,version="%prog " + __version__)
-	parser.add_option("-g","--gene",action="store",type="string", dest="gene_file",help="Genomic sequnence(s) of RNA in FASTA (https://en.wikipedia.org/wiki/FASTA_format) or standard 12-column BED (https://genome.ucsc.edu/FAQ/FAQformat.html#format1) format. It is recommended to use *short* and *unique* sequence identifiers (such as Ensembl transcript id) in FASTA and BED file. If this is a BED file, reference genome ('-r/--ref') should be specified. The input FASTA or BED file could be a regular text file or compressed file (*.gz, *.bz2) or accessible URL (http://, https://, ftp://).")
+	parser.add_option("-g","--gene",action="store",type="string", dest="gene_file",help="Genomic sequnence(s) of RNA in FASTA (https://en.wikipedia.org/wiki/FASTA_format) or standard 12-column BED (https://genome.ucsc.edu/FAQ/FAQformat.html#format1) format. It is recommended to use *short* and *unique* sequence identifiers (such as Ensembl transcript id) in FASTA and BED file. If this is a BED file, reference genome ('-r/--ref') should be specified. The input FASTA or BED file could be a regular text file or compressed file (*.gz, *.bz2) or accessible URL (http://, https://, ftp://). URL file cannot be a compressed file.")
 	parser.add_option("-o","--outfile",action="store",type="string", dest="out_file",help="The prefix of output files.")
 	parser.add_option("-d","--logitModel",action="store",dest="logit_model",help="Logistic regression model. The prebuilt models for Human, Mouse, Fly, Zebrafish are availablel. Run 'make_logitModel.py' to build logistic regression model for your own training datset.")
 	parser.add_option("-x","--hex",action="store",dest="hexamer_dat",help="The hexamer frequency table. The prebuilt tables for Human, Mouse, Fly, Zebrafish are availablel. Run 'make_hexamer_tab.py' to make this table for your own training dataset.")

@@ -8,7 +8,7 @@ Setup script for CPAT  -- Coding Potential Assessment Tool
 
 def main():
 	setup(  name = "CPAT",
-			version = "3.0.3",
+			version = "3.0.4",
 			py_modules = [ 'psyco_full' ],
 			python_requires='>=3.5',
 			packages = find_packages( 'lib' ),
@@ -19,14 +19,14 @@ def main():
 			test_suite = 'nose.collector',
 			setup_requires = ['nose>=0.10.4'],
 			author = "Liguo Wang, Jung Hyun Park",
-			author_email ="wangliguo78@gmail.com, hj_park@pitt.edu",
+			author_email ="wang.liguo@mayo.edu, wei.li@uci.edu, hj_park@pitt.edu",
 			platforms = ['Linux','MacOS'],
 			requires = ['cython (>=0.17)'],
 			install_requires = ['numpy','pysam'], 
 			description = "CPAT (Coding Potential Assessment Tool)",
 			long_description = "CPAT is an alignment-free method to predict RNA coding potential using four sequence features.",
 			license='GNU General Public License',
-			url = "http://rna-cpat.sourceforge.net/",
+			url = "http://rna-cpat.sourceforge.net/, https://wlcb.oit.uci.edu/cpat",
 			zip_safe = False,
 			dependency_links = [],
 			classifiers=[
