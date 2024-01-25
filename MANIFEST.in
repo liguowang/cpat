@@ -4,4 +4,4 @@ include LICENSE.txt
 
 recursive-include src *
 recursive-include models *
-recursive-include docs_v3 *
+recursive-include docs *
