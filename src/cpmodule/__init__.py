@@ -1,6 +1,5 @@
 import sys
 import logging
-# import pysam
 from textwrap import wrap
 from optparse import OptionParser
 
@@ -496,33 +495,22 @@ def make_logitModel():
         if not (file):
             parser.print_help()
             sys.exit(0)
-
+    
     if options.debug:
-        logging.basicConfig(
-            filename='%s' % options.log_file,
-            filemode='w',
-            format="%(asctime)s [%(levelname)s] %(message)s",
-            datefmt='%Y-%m-%d %I:%M:%S',
-            level=logging.DEBUG)
+        logging.basicConfig(filename='%s' % options.log_file, filemode='w',format = "%(asctime)s [%(levelname)s]  %(message)s",datefmt='%Y-%m-%d %I:%M:%S', level=logging.DEBUG)
     else:
-        logging.basicConfig(
-            filename='%s' % options.log_file,
-            filemode='w',
-            format="%(asctime)s [%(levelname)s] % (message)s",
-            datefmt='%Y-%m-%d %I:%M:%S',
-            level=logging.INFO)
-    # logging to console
-    logFormat = logging.Formatter(
-        "%(asctime)s [%(levelname)s]  %(message)s",
-        datefmt='%Y-%m-%d %I:%M:%S')
+        logging.basicConfig(filename='%s' % options.log_file, filemode='w',format = "%(asctime)s [%(levelname)s]  %(message)s",datefmt='%Y-%m-%d %I:%M:%S', level=logging.INFO)
+    #logging to console
+    logFormat = logging.Formatter("%(asctime)s [%(levelname)s]  %(message)s",datefmt='%Y-%m-%d %I:%M:%S')
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(logFormat)
     logging.getLogger().addHandler(consoleHandler)
 
+
     start_codons = options.start_codons.strip().split(',')
     stop_codons = options.stop_codons.strip().split(',')
-    logging.info("Start codons used: [%s]" % ','.join(start_codons))
-    logging.info("Stop codons used: [%s]" % ','.join(stop_codons))
+    logging.info("Start codons used: \"%s\"", ','.join(start_codons))
+    logging.info("Stop codons used: \"%s\"", ','.join(stop_codons))
 
     # data used to build logit model
     train_data = []
@@ -531,8 +519,8 @@ def make_logitModel():
     header = ['ID', 'mRNA', 'ORF', 'Fickett', 'Hexamer', 'Label']
 
     # build hexamer table from hexamer frequency file
-    logging.info(
-        "Reading hexamer frequency table file: \"%s\"" % options.hexamer_dat)
+    logging.info("Reading hexamer frequency table file: \"%s\"",
+                 options.hexamer_dat)
     coding = {}
     noncoding = {}
     for line in open(options.hexamer_dat, 'r'):
@@ -546,18 +534,18 @@ def make_logitModel():
     # process protein coding transcripts
     count = 0
     logging.info(
-        "Process protein-coding RNA file: \"%s\"" % options.coding_file)
+        "Process protein-coding RNA file: \"%s\"", options.coding_file)
 
     file_format = bed_or_fasta(options.coding_file)
     if file_format == 'UNKNOWN':
         logging.error(
-            "Error: unknown file format \"%s\"" % options.coding_file)
+            "Error: unknown file format \"%s\"", options.coding_file)
         parser.print_help()
         sys.exit(0)
     elif file_format == 'BED':
         logging.info(
-            "Protein-coding RNA file \"%s\" is in BED format"
-            % options.coding_file)
+            "Protein-coding RNA file \"%s\" is in BED format",
+            options.coding_file)
         if not options.ref_genome:
             logging.error(
                 "Error: Reference genome file must be provided")
@@ -576,13 +564,6 @@ def make_logitModel():
             if line.startswith('browser'):
                 continue
 
-            # option-1: extract mRNA seq from BED and then find the longest ORF as CDS
-            # features = extract_feature_from_bed(line, refgenome = options.ref_genome, stt = start_codons, stp = stop_codons, c_tab=coding, g_tab=noncoding, min_orf = options.min_orf_len)
-            # if features is None:
-            #    logging.warning("No ORF found for: %s" % '\t'.join(line.split()[0:6]))
-            #    continue
-            # (gene_id, mRNA_size, CDS_size, fickett_score, hexamer) = features
-
             # option-2: extract CDS directly from BED
             (gene_id, mRNA_size, CDS_size, fickett_score, hexamer) = \
                 extract_CDS_from_bed(
@@ -600,7 +581,7 @@ def make_logitModel():
                                fickett_score,
                                hexamer,
                                coding_label])
-        logging.info("Total %d coding rows finished." % count)
+        logging.info("Total %d coding rows finished.", count)
     elif file_format == 'FASTA':
         if options.ref_genome:
             logging.warning(
@@ -630,23 +611,23 @@ def make_logitModel():
                 fickett_score,
                 hexamer,
                 coding_label])
-        logging.info("Total %d coding sequences finished." % count)
+        logging.info("Total %d coding sequences finished.", count)
 
     # process Non-protein coding transcripts
     count = 0
     logging.info(
-        "Process non-coding RNA file: \"%s\"" % options.noncoding_file)
+        "Process non-coding RNA file: \"%s\"", options.noncoding_file)
 
     file_format = bed_or_fasta(options.noncoding_file)
     if file_format == 'UNKNOWN':
         logging.error(
-            "Error: unknown file format \"%s\"" % options.noncoding_file)
+            "Error: unknown file format \"%s\"", options.noncoding_file)
         parser.print_help()
         sys.exit(0)
     elif file_format == 'BED':
         logging.info(
-            "Non-coding RNA file \"%s\" is in BED format"
-            % options.noncoding_file)
+            "Non-coding RNA file \"%s\" is in BED format",
+            options.noncoding_file)
         if not options.ref_genome:
             logging.error("Error: Reference genome file must be provided")
             parser.print_help()
@@ -666,8 +647,8 @@ def make_logitModel():
             fields = line.split()
             if int(fields[1]) != int(fields[6]):
                 logging.warning(
-                    "This seems to be protein-coding:%s"
-                    % '\t'.join(fields[0:6]))
+                    "This seems to be protein-coding:%s",
+                    '\t'.join(fields[0:6]))
 
             # if not line.strip(): continue
             features = extract_feature_from_bed(
@@ -680,7 +661,7 @@ def make_logitModel():
                 min_orf=options.min_orf_len)
             if features is None:
                 logging.warning(
-                    "No ORF found for: %s" % '\t'.join(line.split()[0:6]))
+                    "No ORF found for: %s", '\t'.join(line.split()[0:6]))
                 continue
             (gene_id, mRNA_size, CDS_size, fickett_score, hexamer) = features
             train_data.append([
@@ -690,15 +671,15 @@ def make_logitModel():
                 fickett_score,
                 hexamer,
                 noncoding_label])
-        logging.info("Total %d non-coding rows finished." % count)
+        logging.info("Total %d non-coding rows finished.", count)
     elif file_format == 'FASTA':
         if options.ref_genome:
             logging.warning(
                 "Reference genome sequence [-r] will be ignored when input \
                 file is in FASTA format.")
         logging.info(
-            "Non-coding RNA file \"%s\" is in FASTA format"
-            % options.noncoding_file)
+            "Non-coding RNA file \"%s\" is in FASTA format",
+            options.noncoding_file)
         for sname, seq in FrameKmer.seq_generator(options.noncoding_file):
             count += 1
             if count % 10 == 0:
@@ -722,9 +703,9 @@ def make_logitModel():
                 fickett_score,
                 hexamer,
                 noncoding_label])
-        logging.info("Total %d non-coding sequences finished." % count)
+        logging.info(f"Total {count} non-coding sequences finished.")
     # writing data
-    logging.info("Wrting to \"%s\"" % (options.out_file + '.feature.xls'))
+    logging.info("Wrting to \"%s\"", (options.out_file + '.feature.xls'))
     TMP = open(options.out_file + '.feature.xls', 'w')
     print('\t'.join(header), file=TMP)
     for i in train_data:
@@ -732,5 +713,4 @@ def make_logitModel():
     TMP.close()
 
     # print("build logi model ...", file=sys.stderr)
-    make_logit(options.out_file + '.feature.xls', options.out_file +
-               '.make_logitModel.r', options.out_file + '.logit.RData')
+    make_logit(options.out_file + '.feature.xls', options.out_file + '.make_logitModel.r', options.out_file + '.logit.RData')
