@@ -24,10 +24,10 @@ Release history
 Use "pyproject.toml" to replace "setup.py".
 
 .. Note::
-   ``cpat.py`` is now renamed to ``cpat``,
-   ``make_hexamer_tab.py`` is renamed to ``make_hexamer_tab``,
-   ``make_logitModel.py`` is renamed to ``make_logitModel``.
-   To ensure compatibility with the previous pipelines, please add the following lines into your ~/.bashrc file.
+   * ``cpat.py`` is now renamed to ``cpat``. Similarly,
+   * ``make_hexamer_tab.py`` is renamed to ``make_hexamer_tab``,
+   * ``make_logitModel.py`` is renamed to ``make_logitModel``.
+   * To ensure compatibility with the previous pipelines, please add the following lines into your ~/.bashrc file.
 
 .. code-block:: bash
 
@@ -75,7 +75,7 @@ from a set of known protein-coding genes and another set of non-coding genes.
 4) `Hexamer usage bias <http://nar.oxfordjournals.org/content/20/24/6441.abstract>`_
 
 CPAT will then builds a `logistic regression <https://en.wikipedia.org/wiki/Logistic_regression>`_ model using these 4 features as predictor variables and the "protein-coding status" as 
-the response variable. After evaluating the performance and determining the probability cutoff, the model can be used to predict new RNA sequences. 
+the response variable. After evaluating the performance and determining the probability cutoff, the model can be used to predict the coding potential of new RNA sequences. 
 
 
 Installation
@@ -87,7 +87,8 @@ Prerequisite
 
 1) `python3.5 <https://www.python.org/download/releases/3.0/>`_ or later version
 2) `numpy <http://numpy.scipy.org/>`_
-3) `R <http://www.r-project.org/>`_
+3) `pysam <https://pysam.readthedocs.io/en/latest/index.html>`_
+4) `R <http://www.r-project.org/>`_
  
 install CPAT using pip3
 ------------------------
@@ -109,9 +110,11 @@ Run CPAT online
 
 **Step1: Upload data to CPAT server. There are 3 different ways to uploada**
 
-* Upload BED or FASTA format files from local disk. Files can be regular or compressed (*.gz, *.Z. *.z, *.bz, *.bz2, *.bzip2). 
-* For small dataset, user can copy and paste data (in BED or FASTA format) directly to the text area.
-* For extremely larger dataset, user can save data in web server (http, https or ftp) first, then paste the data url to text area.
+ * Upload BED or FASTA format files from local disk. Files can be regular or compressed (.gz, .Z. .z, .bz, .bz2, .bzip2). 
+
+ * For small dataset, user can copy and paste data (in BED or FASTA format) directly to the text area.
+
+ * For larger dataset, user can save data in web server (http, https or ftp) first, then paste the data url to text area. For very large dataset, run CPAT locally.
 
 **Step2: Select Select Species assembly**
 
@@ -129,232 +132,299 @@ Run CPAT on local computer
 Input files
 ------------
 
-User need to provide a gene file ('-g'), a logit model file ('-d'), a hexamer frequency table file ('-x')
-and specify the output file name('-o'). Gene file could be either in `BED <http://genome.ucsc.edu/FAQ/FAQformat.html#format1.7>`_. 
-or `FASTA <http://en.wikipedia.org/wiki/FASTA_format>`_ format. If in BED format, user also needs to specify reference genome sequence ('-r').
+User needs to provide a gene file ('-g'), a logit model file ('-d'), a hexamer frequency table file ('-x')
+and specify the output file name('-o'). Gene file could be either in `BED <http://genome.ucsc.edu/FAQ/FAQformat.html#format1.7>`_ 
+or `FASTA <http://en.wikipedia.org/wiki/FASTA_format>`_ format. If in BED format, user also needs to specify the reference genome sequence file ('-r').
 
-* `BED <http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.bed>`_ format file (regular text or compressed). `BED <http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.bed>`_ file should be in standard 12-column format.
-* `FASTA <http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.mRNA.fa>`_ format file (regular text or compressed)
-* a URL pointing to data that are saved remotely (data could be either BED or FASTA, either regular text or compressed file). http://, https:// and ftp:// are supported. A remote file cannot be compressed.
 
 Command line options
 --------------------
 
-Options:
-  --version             show program's version number and exit
-  -h, --help            show this help message and exit
-  -g GENE_FILE, --gene=GENE_FILE
-                        Genomic sequnence(s) of RNA in FASTA
-                        (https://en.wikipedia.org/wiki/FASTA_format) or
-                        standard 12-column BED
-                        (https://genome.ucsc.edu/FAQ/FAQformat.html#format1)
-                        format. It is recommended to use *short* and *unique*
-                        sequence identifiers (such as Ensembl transcript id)
-                        in FASTA and BED file. If this is a BED file,
-                        reference genome ('-r/--ref') should be specified. The
-                        input FASTA or BED file could be a regular text file
-                        or compressed file (*.gz, *.bz2) or accessible URL
-                        (http://, https://, ftp://).
-  -o OUT_FILE, --outfile=OUT_FILE
-                        The prefix of output files.
-  -d LOGIT_MODEL, --logitModel=LOGIT_MODEL
-                        Logistic regression model. The prebuilt models for
-                        Human, Mouse, Fly, Zebrafish are availablel. Run
-                        'make_logitModel.py' to build logistic regression
-                        model out of your own training datset.
-  -x HEXAMER_DAT, --hex=HEXAMER_DAT
-                        The hexamer frequency table. The prebuilt tables for
-                        Human, Mouse, Fly, Zebrafish are availablel. Run
-                        'make_hexamer_tab.py' to make this table out of your
-                        own training dataset.
-  -r REF_GENOME, --ref=REF_GENOME
-                        Reference genome sequences in FASTA format. Reference
-                        genome file will be indexed automatically (produce
-                        *.fai file along with the original *.fa file within
-                        the same directory) if hasn't been done. Ignore this
-                        option if FASTA file was provided to '-g/--gene'.
-  --antisense           Also search for ORFs from the anti-sense strand.
-                        *Sense strand* (or coding strand) is DNA strand that
-                        carries the translatable code in the 5′ to 3′
-                        direction. default=False (i.e. only search for ORFs
-                        from the sense strand)
-  --start=START_CODONS  Start codon used by ORFs. Use 'T' instead of 'U'.
-                        default=ATG
-  --stop=STOP_CODONS    Stop codons used by ORFs. Multiple stop codons should
-                        be separated by ','. Use 'T' instead of 'U'.
-                        default=TAG,TAA,TGA
-  --min-orf=MIN_ORF_LEN
-                        Minimum ORF length in nucleotides.  default=75
-  --top-orf=N_TOP_ORF   Number of ORF candidates. Many RNAs have dozens of
-                        possible ORFs, in most cases, the real ORF is ranked
-                        (by size) in the top several. To increase speed, we do
-                        not need to calculate "Fickett score", "Hexamer score"
-                        and "coding probability" for all of them. default=5
-  --width=LINE_WIDTH    Line width of output ORFs in FASTA format.
-                        default=100
-  --log-file=LOG_FILE   Name of log file. default="CPAT_run_info.log"
-  --best-orf=MODE       Criteria to select the best ORF: "l"=length, selection
-                        according to the "ORF length"; "p"=probability,
-                        selection according to the "coding probability".
-                        default="p"
-  --verbose             Logical to determine if detailed running information
-                        is printed to screen.
-                        
+``$ cpat -h``
+
+.. code-block:: text
+
+ cpat  [options]
+
+ Options:
+   --version             show program's version number and exit
+   -h, --help            show this help message and exit
+   -g GENE_FILE, --gene=GENE_FILE
+                         Genomic sequnence(s) of RNA in FASTA
+                         (https://en.wikipedia.org/wiki/FASTA_format) or
+                         standard 12-column  BED
+                         (https://genome.ucsc.edu/FAQ/FAQformat.html#format1)
+                         format. It is recommended to use *short* and *unique*
+                         sequence identifiers (such as Ensembl transcript id)
+                         in FASTA and BED file. If this is a BED file,
+                         reference genome ('-r/--ref') should be specified.
+                         The input FASTA or BED file could be a regular text
+                         file or compressed file (*.gz, *.bz2) or accessible
+                         URL (http://, https://, ftp://). URL file cannot be a
+                         compressed file.
+   -o OUT_FILE, --outfile=OUT_FILE
+                         The prefix of output files.
+   -d LOGIT_MODEL, --logitModel=LOGIT_MODEL
+                         Logistic regression model. The prebuilt models
+                         for Human, Mouse, Fly, Zebrafish are availablel.
+                         Run 'make_logitModel.py' to build logistic
+                         regression model for your own training datset.
+   -x HEXAMER_DAT, --hex=HEXAMER_DAT
+                         The hexamer frequency table.                       The
+                         prebuilt tables for Human, Mouse, Fly, Zebrafish
+                         are availablel. Run 'make_hexamer_tab.py' to make this
+                         table for your own training dataset.
+   -r REF_GENOME, --ref=REF_GENOME
+                         Reference genome sequences in FASTA format.
+                         Reference genome file will be indexed automatically
+                         if the index file ( *.fai) does not exist. Will be
+                         ignored if FASTA file was provided to '-g/--gene'.
+   --antisense           Logical to determine whether to search for ORFs
+                         from the anti-sense strand. *Sense strand* (or coding
+                         strand) is DNA strand that carries the translatable
+                         code in the 5′ to 3′ direction. default=False (i.e.
+                         only search for ORFs from the sense strand)
+   --start=START_CODONS  Start codon (use 'T' instead of 'U') used to
+                         define the start of open reading frame (ORF).
+                         default=ATG
+   --stop=STOP_CODONS    Stop codon (use 'T' instead of 'U') used to
+                         define the end of open reading frame (ORF). Multiple
+                         stop codons are separated by ','. default=TAG, TAA,
+                         TGA
+   --min-orf=MIN_ORF_LEN
+                         Minimum ORF length in nucleotides.
+                         default=75
+   --top-orf=N_TOP_ORF   Number of ORF candidates reported. RNAs may
+                         have dozens of putative ORFs, in most cases, the real
+                         ORF is ranked (by size) in the top several. It is not
+                         necessary to calculate "Fickett score",
+                         "Hexamer score" and "coding probability" for every
+                         ORF. default=5
+   --width=LINE_WIDTH    Line width of output ORFs in FASTA format.
+                         default=100
+   --log-file=LOG_FILE   Name of log file. default="CPAT_run_info.log"
+   --best-orf=MODE       Criteria to select the best ORF: "l"=length,
+                         selection according to the "ORF length";
+                         "p"=probability, selection according to the
+                         "coding probability". default="p"
+   --verbose             Logical to determine if detailed running
+                         information is printed to screen.
+
+
 Examples
 --------
  
-Use FASTA file as input::
+Use local FASTA file as input
 
- $ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA.fa -o output1
+``$ cpat -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA.fa -o output1``
 
-Use remote FASTA file as input::
+Use a remote FASTA file as input
 
- $ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g https://data.cyverse.org/dav-anon/iplant/home/liguow/CPAT/Human_test_coding_mRNA.fa -o output2
+``$ cpat -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g https://data.cyverse.org/dav-anon/iplant/home/liguow/CPAT/Human_test_coding_mRNA.fa -o output2``
 
-Use BED file as input. '-r' is required::
+Use BED file as input. '-r' is required
 
- $ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA_hg19.bed -r hg19.fa -o output3
+``$ cpat -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA_hg19.bed -r hg19.fa -o output3``
 
-output files
--------------
-* output.ORF_seqs.fa: The top ORF sequences (at least 75 nucleotides long) in FASTA format.
-* output.ORF_prob.tsv: ORF information (strand, frame, start, end, size, Fickett TESTCODE score, Hexamer score) and coding probability)
-* output.ORF_prob.best.tsv: The information of the best ORF. This file is a subset of "output.ORF_prob.tsv"
-* output.no_ORF.txt: Sequence IDs or BED entries with no ORF found. Should be considered as non-coding.
-* output.r: Rscript file.
-* CPAT_run_info.log: log file
+Output
+-------
+
+.. glossary::
+
+  1. output.ORF_seqs.fa
+     The top ORF sequences (at least 75 nucleotides long) in FASTA format.
+  
+  2. output.ORF_prob.tsv
+    ORF information (strand, frame, start, end, size, Fickett TESTCODE score, Hexamer score) and coding probability)
+  
+  3. output.ORF_prob.best.tsv
+    The information of the best ORF. This file is a subset of "output.ORF_prob.tsv"
+  
+  4. output.no_ORF.txt
+    Sequence IDs or BED entries with no ORF found. Should be considered as non-coding.
+  
+  5. output1.r
+    Rscript file.
+  
+  6. CPAT_run_info.log
+    The log file.
 
 
-Build hexamer table
-===================
-**make_hexamer_tab.py** calculates the in frame hexamer (6mer) frequency from CDS sequence in fasta format. The CDS is mRNA sequence that removes UTR.
-This table is required by CPAT to calculate the hexamer usage score. Users can download prebuilt hexamer tables (Human, Mouse, Fly, Zebrafish) from `here <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/>`_
+Build your own hexamer table
+============================
+``make_hexamer_tab`` calculates the in frame hexamer (6mer) frequency from `CDS <https://en.wikipedia.org/wiki/Coding_region>`_ sequence in fasta format. A `CDS <https://en.wikipedia.org/wiki/Coding_region>`_ is an mRNA sequence without the 3' `UTR <https://en.wikipedia.org/wiki/Untranslated_region>`_ and 5' `UTR <https://en.wikipedia.org/wiki/Untranslated_region>`_ regions.
+This table is required by ``cpat`` to calculate the hexamer usage score. Users can download prebuilt hexamer tables (Human, Mouse, Fly, Zebrafish) from `here <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/>`_.
 
-Options:
-  --version             show program's version number and exit
-  -h, --help            show this help message and exit
-  -c CODING_FILE, --cod=CODING_FILE
-                        Coding sequence (must be CDS without UTR, i.e. from start coden to stop coden) in fasta format.
-                        User can get CDS sequence of a bed file using `UCSC table browser <http://genome.ucsc.edu/cgi-bin/hgTables?org=Human&db=hg19&hgsid=289407045&hgta_doMainPage=1>`_ 
-  -n NONCODING_FILE, --noncod=NONCODING_FILE
-                        Noncoding sequences in fasta format
+
+Usage
+------
+
+``$ make_hexamer_tab -h``
+
+.. code-block:: text
+
+ make_hexamer_tab  [options]
+
+ Options:
+   --version             show program's version number and exit
+   -h, --help            show this help message and exit
+   -c CODING_FILE, --cod=CODING_FILE
+                         Coding sequence (must be CDS without UTR, i.e.
+                         from start coden to stop coden) in fasta format
+   -n NONCODING_FILE, --noncod=NONCODING_FILE
+                         Noncoding sequences in fasta format
                         
-Example::
- 
- $ make_hexamer_tab.py -c Human_coding_transcripts_CDS.fa   -n Human_noncoding_transcripts_RNA.fa >Human_Hexamer.tsv
+Example
+-------
 
- $ head Human_Hexamer.tsv
- 
- hexamer	coding	noncoding
- GAACGT	0.000114999540425	6.20287252729e-05
- CTTCTT	0.000280298143192	0.000464526231488
- CACCCT	0.000254883880114	0.000337895737524
- GAACGG	0.000178535198119	5.8077265737e-05
- GAACGC	0.000136389878516	6.03746259323e-05
- GAACGA	0.00015830968042	5.87205265917e-05
- CACCCA	0.000258696019576	0.000448628498937
- CTTCTA	0.000147508618612	0.000280645521457
- CACCCC	0.000328479350276	0.000342582352322
+First, download these two files:
+
+ * Coding CDS sequences in FASTA format: `Human_coding_transcripts_CDS.fa.gz <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/test/Human_coding_transcripts_CDS.fa.gz>`_
+ * Noncoding sequences in FASTA format: `Human_noncoding_transcripts_RNA.fa.gz <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/test/Human_noncoding_transcripts_RNA.fa.gz>`_
+
+Then, run:
+
+``$ make_hexamer_tab -c Human_coding_transcripts_CDS.fa.gz -n Human_noncoding_transcripts_RNA.fa.gz >Human_Hexamer.tsv``
+
+Output
+-------
+
+``$ head Human_Hexamer.tsv``
+
+.. code-block:: text
+
+ hexamer coding  noncoding
+ AAAAAA  0.0006471106736092786 0.001606589931772997
+ AAAAAC  0.00042092373222007566  0.0005113004850646316
+ AAAAAG  0.0008133623112408557 0.0006870944872085282
+ AAAAAT  0.0005917287586530271 0.0009504638599970318
+ AAAACA  0.0004934602747535982 0.0007256901384894673
+ AAAACC  0.0004003805362324795 0.0003686803641407804
+ AAAACG  9.064420497619743e-05 0.00010448394168197091
+ AAAACT  0.0004068399947646618 0.0004784022870680216
+ AAAAGA  0.0004286539039061299 0.000774026596998453
  ...
                      
-Build Logit model
-=================
-Build logistic regression model ("prefix.logit.RData") required by CPAT. This program will output
+Build your own logit model
+==========================
+Build logistic regression model ("prefix.logit.RData") required by ``cpat``. This program will output
 3 files:
 
 * prefix.feature.xls: A table contains features calculated from training datasets (coding and noncoding gene lists).
 * prefix.logit.RData: logit model required by CPAT (if R was installed).
 * prefix.make_logitModel.r: R script to build the above logit model.
 
-Note: Users can download prebuilt logit models (Human, Mouse, Fly, Zebrafish) from `here <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model>`_
+Note: Users can download `prebuilt logit models <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model>`_ for Human, Mouse, Fly and Zebrafish.
 
+Usage
+------
+.. code-block:: text
 
-Options:
-  --version             show program's version number and exit
-  -h, --help            show this help message and exit
-  -c CODING_FILE, --cgene=CODING_FILE
-                        Genomic sequnences of protein-coding RNAs in FASTA
-                        (https://en.wikipedia.org/wiki/FASTA_format) or
-                        standard 12-column BED
-                        (https://genome.ucsc.edu/FAQ/FAQformat.html#format1)
-                        format. It is recommended to use *short* and *unique*
-                        sequence identifiers (such as Ensembl transcript id)
-                        in FASTA and BED file. The input FASTA or BED file
-                        could be a regular text file or compressed file (*.gz,
-                        *.bz2) or accessible URL (http://, https://, ftp://).
-                        When BED file is provided, use the ORF defined in the
-                        BED file (the 7th and 8th columns in BED file define
-                        the positions of 'start codon, and 'stop codon',
-                        respectively). When FASTA file is provided, searching
-                        for the longet ORF. For well annotated genome, we
-                        recommend using BED file as input because the longest
-                        ORF predicted from RNA sequence might not be the real
-                        ORF. If this is a BED file, reference genome
-                        ('-r/--ref') should be specified.
-  -n NONCODING_FILE, --ngene=NONCODING_FILE
-                        Genomic sequences of non-coding RNAs in FASTA
-                        (https://en.wikipedia.org/wiki/FASTA_format) or
-                        standard 12-column BED
-                        (https://genome.ucsc.edu/FAQ/FAQformat.html#format1)
-                        format. It is recommended to use *short* and *unique*
-                        sequence identifiers (such as Ensembl transcript id)
-                        in FASTA and BED file. The input FASTA or BED file
-                        could be a regular text file or compressed file (*.gz,
-                        *.bz2) or accessible URL (http://, https://, ftp://).
-                        If this is a BED file, reference genome ('-r/--ref')
-                        should be specified.
-  -o OUT_FILE, --outfile=OUT_FILE
-                        The prefix of output files.
-  -x HEXAMER_DAT, --hex=HEXAMER_DAT
-                        Hexamer frequency table. CPAT has prebuilt hexamer
-                        frequency tables for Human, Mouse, Fly, Zebrafish. Run
-                        'make_hexamer_tab.py' to generate this table.
-  -r REF_GENOME, --ref=REF_GENOME
-                        Reference genome sequences in FASTA format. Ignore
-                        this option if mRNA sequences file was provided to
-                        '-g'. Reference genome file will be indexed
-                        automatically if the index file  *.fai) does not
-                        exist.
-  -s START_CODONS, --start=START_CODONS
-                        Start codon (use 'T' instead of 'U') used to define
-                        the start of open reading frame (ORF). default=ATG
-  -t STOP_CODONS, --stop=STOP_CODONS
-                        Stop codon (use 'T' instead of 'U') used to define the
-                        end of open reading frame (ORF). Multiple stop codons
-                        are separated by ','. default=TAG,TAA,TGA
-  --min-orf=MIN_ORF_LEN
-                        Minimum ORF length in nucleotides.  default=30
-  --log-file=LOG_FILE   Name of log file.
-                        default="make_logitModel_run_info.log"
-  --verbose             Logical to determine if detailed running information
-                        is printed to screen.
+ make_logitModel  [options]
+
+ Options:
+   --version             show program's version number and exit
+   -h, --help            show this help message and exit
+   -c CODING_FILE, --cgene=CODING_FILE
+                         Genomic sequnences of protein-coding RNAs in
+                         FASTA or standard 12-column BED format. It is
+                         recommended to use *short* and *unique* sequence
+                         identifiers (such as Ensembl transcript id) in
+                         FASTA and BED file. The input FASTA or BED file
+                         could be a regular text file or compressed file
+                         (*.gz, *.bz2) or accessible URL (http://, https://,
+                         ftp://). When BED file is provided, use the ORF
+                         defined in the BED file (the 7th and 8th columns in
+                         BED file define the positions of 'start codon,
+                         and 'stop codon', respectively). When FASTA file
+                         is provided, searching for the longet ORF. For
+                         well annotated genome, we recommend using BED file
+                         as input because the longest ORF predicted from
+                         RNA sequence might not be the real ORF. If this is
+                         a BED file, reference genome ('-r/--ref') should be
+                         specified.
+   -n NONCODING_FILE, --ngene=NONCODING_FILE
+                         Genomic sequences of non-coding RNAs in FASTA or
+                         standard 12-column BED format. It is recommended to
+                         use *short* and *unique* sequence identifiers (such as
+                         Ensembl transcript id) in FASTA and BED file. The
+                         input FASTA or BED file could be a regular text file
+                         or compressed file (*.gz, *.bz2) or accessible URL
+                         (http://, https://, ftp://). If this is a BED file,
+                         reference genome ('-r/--ref') should be specified.
+   -o OUT_FILE, --outfile=OUT_FILE
+                         The prefix of output files.
+   -x HEXAMER_DAT, --hex=HEXAMER_DAT
+                         Hexamer frequency table. CPAT has prebuilt hexamer
+                         frequency tables for Human, Mouse, Fly, Zebrafish. Run
+                         'make_hexamer_tab.py' to generate this table.
+   -r REF_GENOME, --ref=REF_GENOME
+                         Reference genome sequences in FASTA format.
+                         Ignore this option if mRNA sequences file was provided
+                         to '-g'. Reference genome file will be indexed
+                         automatically if the index file  *.fai) does not
+                         exist.
+   -s START_CODONS, --start=START_CODONS
+                         Start codon (use 'T' instead of 'U') used to
+                         define the start of open reading frame (ORF).
+                         default=ATG
+   -t STOP_CODONS, --stop=STOP_CODONS
+                         Stop codon (use 'T' instead of 'U') used to
+                         define the end of open reading frame (ORF).
+                         Multiple stop codons are separated by ','.
+                         default=TAG, TAA, TGA
+   --min-orf=MIN_ORF_LEN
+                         Minimum ORF length in nucleotides.
+                         default=30
+   --log-file=LOG_FILE   Name of log file.
+                         default="make_logitModel_run_info.log"
+   --verbose             Logical to determine if detailed running
+                         information is printed to screen.
                         
                         
-Example::
+Example-1: FASTA as input
+-------------------------
 
+``make_logitModel -x Human_Hexamer.tsv -c Human_coding_transcripts_mRNA.fa.gz -n Human_noncoding_transcripts_RNA.fa.gz -o Human``
  
- $ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_mRNA.fa -n Human_noncoding_transcripts_RNA.fa -o Human
- 
- Process protein coding transcripts: Human_coding_transcripts_mRNA.fa
- Input gene file is in FASTA format
- Process non coding transcripts: Human_noncoding_transcripts_RNA.fa
- Input gene file is in FASTA format
- build logi model ...
- Warning message:
- glm.fit: fitted probabilities numerically 0 or 1 occurred 
- 
- #or use BED file as input
- $ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_hg19.bed -n Human_noncoding_transcripts_hg19.bed  -r /database/hg19.fa  -o Human
+.. code-block:: text
 
+ 2024-01-25 10:41:34 [INFO]  Start codons used: "ATG"
+ 2024-01-25 10:41:34 [INFO]  Stop codons used: "TAG, TAA, TGA"
+ 2024-01-25 10:41:34 [INFO]  Reading hexamer frequency table file: "Human_Hexamer.tsv"
+ 2024-01-25 10:41:34 [INFO]  Process protein-coding RNA file: "Human_coding_transcripts_mRNA.fa.gz"
+ 2024-01-25 10:41:34 [INFO]  Protein-coding RNA file "Human_coding_transcripts_mRNA.fa.gz" is in FASTA format
+ 2024-01-25 10:42:12 [INFO]  Total 17984 coding sequences finished.
+ 2024-01-25 10:42:12 [INFO]  Process non-coding RNA file: "Human_noncoding_transcripts_RNA.fa.gz"
+ 2024-01-25 10:42:12 [INFO]  Non-coding RNA file "Human_noncoding_transcripts_RNA.fa.gz" is in FASTA format
+ 2024-01-25 10:42:20 [INFO]  Total 11519 non-coding sequences finished.
+ 2024-01-25 10:42:20 [INFO]  Wrting to "Human.feature.xls"
+ 2024-01-25 10:42:20 [INFO]  Making logistic regression model from "Human.feature.xls" ...
+ ...
+
+Example-2: BED as input
+------------------------
+
+``$ make_logitModel  -x Human_Hexamer.tsv -c Human_coding_transcripts_hg19.bed -n Human_noncoding_transcripts_hg19.bed  -r /database/hg19.fa  -o Human``
+
+.. code-block:: text
+
+ 2024-01-25 10:44:45 [INFO]  Start codons used: "ATG"
+ 2024-01-25 10:44:45 [INFO]  Stop codons used: "TAG, TAA, TGA"
+ 2024-01-25 10:44:45 [INFO]  Reading hexamer frequency table file: "Human_Hexamer.tsv"
+ 2024-01-25 10:44:45 [INFO]  Process protein-coding RNA file: "Human_coding_transcripts_hg19.bed"
+ 2024-01-25 10:44:45 [INFO]  Protein-coding RNA file "Human_coding_transcripts_hg19.bed" is in BED format
+ ...
 
 Use CPAT to detect ORF
 ======================
-It is perfectly fine to use CPAT to find ORFs. And CPAT will gives exactly the same results as `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_
+When using CPAT to find ORFs, it will gives exactly the same results as `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_.
 
 Prepare data
 ---------------
 Below is the mRNA sequence of protein-coding gene `UQCR10 <https://www.genecards.org/cgi-bin/carddisp.pl?gene=UQCR10>`_. Copy and save it as "test.fa". 
-::
+
+.. code-block:: text
 
  >NM_013387.4
  GCGGTGGCGCGAGTTGGACTGTGAAGAAACATGGCGGCCGCGACGTTGAC
@@ -379,14 +449,13 @@ Below is the mRNA sequence of protein-coding gene `UQCR10 <https://www.genecards
 
 Run CPAT
 -----------------------
-The command to run cpat.py is as below
-::
+The command to run cpat.py is as below:
 
- $ cpat.py -x Human_Hexamer.tsv  -d  Human_logitModel.RData  --top-orf=100  --antisense -g test.fa -o output
+``$ cpat -x Human_Hexamer.tsv  -d  Human_logitModel.RData  --top-orf=100  --antisense -g test.fa -o output``
 
 .. note::
    * You must specify :code:`--antisense`, otherwise, it will only search ORFs from the sense strand. 
-   * You also specify :code:`--top-orf` to a big number to report all the ORFs.
+   * You also specify :code:`--top-orf` to a large number to report all the ORFs.
    * The :code:`--min-orf` is set to 75 by default, same as `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_.
 
 
@@ -395,9 +464,11 @@ Check the results
 A total of 8 ORFs were found (sorted by the ORF size, the 7th column). If you copy and paste the same sequence 
 to `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_ web server, you will get **exactly the same** results. 
 
-::
  
- $more output.ORF_prob.tsv
+``$cat output.ORF_prob.tsv``
+
+.. code-block:: text
+
  ID      mRNA    ORF_strand      ORF_frame       ORF_start       ORF_end ORF     Fickett Hexamer Coding_prob
  NM_013387.4_ORF_1       916     -       2       327     1       327     1.103   0.28998918917275        0.792763525921043
  NM_013387.4_ORF_2       916     +       2       209     430     222     1.1605  0.0674464550896935      0.271842476390681
@@ -408,24 +479,32 @@ to `NCBI ORFfinder <https://www.ncbi.nlm.nih.gov/orffinder/>`_ web server, you w
  NM_013387.4_ORF_7       916     -       3       842     735     108     0.5832  -0.19401829042094       0.00290794398512764
  NM_013387.4_ORF_8       916     +       3       684     761     78      0.7415  -0.154613060436537      0.00454929869181486 
 
-CPAT also provides *Fickett's TESTCODE score*, *Hexamer score* and *coding probability* for each ORF, to help you determine which one is more likely the *real* ORF.
-For most mRNAs, the largest ORF is also the most likely one, but not always. In this particular example, ORF_4 is the most likely one to code for protein since it has
-the highest coding probability (plese note, ORF_4 is not the largest ORF of NM_013387.4). This can be demonstrated by BLATing the 8 ORF sequences to the reference genome.
+CPAT offers **Fickett’s TESTCODE score**, **Hexamer score**, and **coding probability** for each ORF. While the largest ORF is often the most probable for most mRNAs, it's not always the case. In the instance of NM_013387.4, the ORF_4 is the most likely to code for protein, evident from its highest coding probability, despite not being the largest ORF. This is confirmed through BLATing the 8 ORF sequences to the reference genome.
 
 .. figure:: _static/UQCR10.jpg
    :height: 180 px
    :width: 1000 px
-   :scale: 50 %
+   :scale: 75 %
  
 
 How to choose cutoff
 =====================
-**Optimum cutoff were determined from TG-ROC**. 
+**Optimum cutoffs were determined from TG-ROC**. For example, in human, coding probability (CP) cutoff >=0.364 indicates coding sequence, CP < 0.364 indicates noncoding sequence.
 
-* Human coding probability (CP) cutoff: 0.364 (CP >=0.364 indicates coding sequence, CP < 0.364 indicates noncoding sequence) (see performance figure D)
-* Mouse coding probability (CP) cutoff: 0.44
-* Fly coding probability (CP) cutoff: 0.39
-* Zebrafish coding probability (CP) cutoff: 0.38
+.. list-table:: Optimum cutoffs
+   :widths: 75 60
+   :header-rows: 1
+
+   * - Species
+     - Coding probability threshold
+   * - Human (*Homo sapiens*)
+     - 0.364
+   * - Mouse (*Mus musculus*)
+     - 0.44
+   * - Fly (*Drosophila melanogaster*)
+     - 0.39
+   * - Zebrafish (*Danio rerio*)
+     - 0.38     
 
 **Here we provide the R code and the data that we used to generate** `Figure 3 <http://nar.oxfordjournals.org/content/41/6/e74/F3.expansion.html>`_ **in our paper**. **Note the** `ROCR <http://cran.r-project.org/web/packages/ROCR/index.html>`_ **library is required to run our R code**. 
 
@@ -482,13 +561,17 @@ How to prepare training dataset
 ==================================
 
 We prebuild hexamer tables and logit models for `human, mouse, fly and zebrafish <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/>`_.
-If you want to run CPAT for other species, you need to prepare your own training data. These two files are required when you run *make_hexamer_tab.py* and *make_logitModel.py*.
+If you want to run CPAT for other species, you need to prepare your own training data.
 
-* It's better to have balanced training dataset (i.e. the number of coding sequences is roughly equal to the number of noncoding sequences).
-* If the genome of the species you are working on is NOT well annotated and does not have enough "coding" and "noncoding" genes to build the training data, you could build your model using data from other species that is evolutionary close to the species you are working on. 
+ * Optimal training datasets exhibit balance, where the count of coding sequences is approximately equal to that of noncoding sequences.
+
+ * In cases where the genome of your target species lacks sufficient annotation of 'coding' and 'noncoding' genes for constructing a training dataset, consider leveraging data from evolutionarily related species to build your model.
 
 Evaluating Performance
-==================================================
+=======================
+
+Figure-1
+--------
 
 Combinatorial effects of 3 major features. 10,000 coding genes (red dots) and 10,000 noncoding genes (blue dots) are clearly separated into two clusters. (below figure)
 
@@ -497,10 +580,9 @@ Combinatorial effects of 3 major features. 10,000 coding genes (red dots) and 10
    :width: 600 px
    :scale: 100 %
 
-Performance evaluation using 10-fold cross validation (10,000 coding genes and 10,000 noncoding genes). Blue dotted curves represent the
-10-fold cross validations, red solid curve represents the averaged curve between 10 runs of
-validations. (A) ROC curve. (B) PR (precision-recall) curve. (C) Accuracy vs cutoff value.
-(D) Two graphic ROC curve to determine the optimum cutoff value.
+Figure-2
+--------
+Performance evaluation was conducted using 10-fold cross-validation, considering a dataset comprising 10,000 coding genes and 10,000 noncoding genes. The blue dotted curves depict the results of individual 10-fold cross-validations, while the red solid curve represents the averaged curve across 10 validation runs. The evaluation metrics include: (A) ROC curve, (B) Precision-Recall (PR) curve, (C) Accuracy plotted against cutoff values, and (D) Two graphical ROC curves aimed at determining the optimum cutoff value.
 
 .. figure:: _static/CPAT_performance.png
    :height: 600 px
@@ -508,8 +590,8 @@ validations. (A) ROC curve. (B) PR (precision-recall) curve. (C) Accuracy vs cut
    :scale: 100 %
 
 
-Comparison
-===========
+Figure-3
+--------
 
 To compare CPAT with CPC and PhyloCSF, we build an independent testing dataset that composed
 of 4,000 high quality protein coding genes from Refseq annotation and 4,000 lincRNAs from
