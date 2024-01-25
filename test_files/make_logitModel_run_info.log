@@ -1,7 +1,0 @@
-2024-01-25 10:44:45 [INFO]  Start codons used: "ATG"
-2024-01-25 10:44:45 [INFO]  Stop codons used: "TAG, TAA, TGA"
-2024-01-25 10:44:45 [INFO]  Reading hexamer frequency table file: "Human_Hexamer.tsv"
-2024-01-25 10:44:45 [INFO]  Process protein-coding RNA file: "Human_coding_transcripts_hg19.bed"
-2024-01-25 10:44:45 [INFO]  Protein-coding RNA file "Human_coding_transcripts_hg19.bed" is in BED format
-2024-01-25 10:59:57 [INFO]  
-You pressed Ctrl+C. Exit!
