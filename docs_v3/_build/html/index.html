@@ -1,19 +1,17 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Release history &#8212; CPAT 3.0.0 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=89b800e6" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=8ebd99bd"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -42,8 +40,22 @@
 <p>This documentation is for CPAT v3.0.0 or future versions. For documentation of CPAT v2.0.0
 and older versions, please go to <a class="reference external" href="http://rna-cpat.sourceforge.net/">http://rna-cpat.sourceforge.net/</a></p>
 </div>
-<div class="section" id="release-history">
-<h1>Release history<a class="headerlink" href="#release-history" title="Permalink to this headline">¶</a></h1>
+<section id="release-history">
+<h1>Release history<a class="headerlink" href="#release-history" title="Permalink to this heading">¶</a></h1>
+<p><strong>CPAT v3.0.5</strong> (01/24/2024)</p>
+<p>Use “pyproject.toml” to replace “setup.py”.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">cpat.py</span></code> is now renamed to <code class="docutils literal notranslate"><span class="pre">cpat</span></code>,
+<code class="docutils literal notranslate"><span class="pre">make_hexamer_tab.py</span></code> is renamed to <code class="docutils literal notranslate"><span class="pre">make_hexamer_tab</span></code>,
+<code class="docutils literal notranslate"><span class="pre">make_logitModel.py</span></code> is renamed to <code class="docutils literal notranslate"><span class="pre">make_logitModel</span></code>.
+To ensure compatibility with the previous pipelines, please add the following lines into your ~/.bashrc file.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span>cpat.py<span class="o">=</span><span class="s1">&#39;cpat&#39;</span>
+<span class="nb">alias</span><span class="w"> </span>make_hexamer_tab.py<span class="o">=</span><span class="s1">&#39;make_hexamer_tab&#39;</span>
+<span class="nb">alias</span><span class="w"> </span>make_logitModel.py<span class="o">=</span><span class="s1">&#39;make_logitModel&#39;</span>
+</pre></div>
+</div>
 <p><strong>CPAT v3.0.4</strong> (05/26/2021)</p>
 <p>Fix bug to read remote file for Python3.</p>
 <p><strong>CPAT v3.0.3</strong> (03/08/2021)</p>
@@ -62,9 +74,9 @@ real ORF. Version 3.0.0 is released to address this problem.</p>
 <li><p>In addition to basic ORF information (“ORF frame”, “ORF strand”, “ORF start”, “ORF end”, “ORF sequence”), it also reports “coding probability” for each ORF.</p></li>
 <li><p>The best ORF will be selected (controlled by <code class="code docutils literal notranslate"><span class="pre">--best-orf</span></code>) either by <strong>ORF length</strong> or <strong>coding probability</strong>.</p></li>
 </ol>
-</div>
-<div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
 <p>CPAT is a bioinformatics tool to predict RNA’s coding probability based on the RNA sequence characteristics. To achieve this goal,  CPAT calculates scores of these 4 linguistic features
 from a set of known protein-coding genes and another set of non-coding genes.</p>
 <ol class="arabic simple">
@@ -75,19 +87,19 @@ from a set of known protein-coding genes and another set of non-coding genes.</p
 </ol>
 <p>CPAT will then builds a <a class="reference external" href="https://en.wikipedia.org/wiki/Logistic_regression">logistic regression</a> model using these 4 features as predictor variables and the “protein-coding status” as
 the response variable. After evaluating the performance and determining the probability cutoff, the model can be used to predict new RNA sequences.</p>
-</div>
-<div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="prerequisite">
-<h2>Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
+<section id="prerequisite">
+<h2>Prerequisite<a class="headerlink" href="#prerequisite" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p><a class="reference external" href="https://www.python.org/download/releases/3.0/">python3.5</a> or later version</p></li>
 <li><p><a class="reference external" href="http://numpy.scipy.org/">numpy</a></p></li>
 <li><p><a class="reference external" href="http://www.r-project.org/">R</a></p></li>
 </ol>
-</div>
-<div class="section" id="install-cpat-using-pip3">
-<h2>install CPAT using pip3<a class="headerlink" href="#install-cpat-using-pip3" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="install-cpat-using-pip3">
+<h2>install CPAT using pip3<a class="headerlink" href="#install-cpat-using-pip3" title="Permalink to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip3 install CPAT
 $ pip3 install CPAT --upgrade  # if you already have CPAT v2.0 installed
 </pre></div>
@@ -98,10 +110,10 @@ $ pip3 install CPAT --upgrade  # if you already have CPAT v2.0 installed
 <li><p>User need to download prebuilt <a class="reference external" href="https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/">logit model and hexamer table</a> for human, mouse, zebrafish and fly. For other species, we provide scripts to build these models (see below).</p></li>
 </ul>
 </div>
-</div>
-</div>
-<div class="section" id="run-cpat-online">
-<h1>Run CPAT online<a class="headerlink" href="#run-cpat-online" title="Permalink to this headline">¶</a></h1>
+</section>
+</section>
+<section id="run-cpat-online">
+<h1>Run CPAT online<a class="headerlink" href="#run-cpat-online" title="Permalink to this heading">¶</a></h1>
 <p><a class="reference external" href="https://wlcb.oit.uci.edu/cpat/">https://wlcb.oit.uci.edu/cpat</a> is hosted by Dr Wei Li’s lab &#64; University of California Irvine.</p>
 <p><strong>Step1: Upload data to CPAT server. There are 3 different ways to uploada</strong></p>
 <ul class="simple">
@@ -119,11 +131,11 @@ $ pip3 install CPAT --upgrade  # if you already have CPAT v2.0 installed
 <li><p>When input file is FASTA format, the reference genome and the assembly version is ignored.</p></li>
 </ul>
 </div>
-</div>
-<div class="section" id="run-cpat-on-local-computer">
-<h1>Run CPAT on local computer<a class="headerlink" href="#run-cpat-on-local-computer" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="input-files">
-<h2>Input files<a class="headerlink" href="#input-files" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="run-cpat-on-local-computer">
+<h1>Run CPAT on local computer<a class="headerlink" href="#run-cpat-on-local-computer" title="Permalink to this heading">¶</a></h1>
+<section id="input-files">
+<h2>Input files<a class="headerlink" href="#input-files" title="Permalink to this heading">¶</a></h2>
 <p>User need to provide a gene file (‘-g’), a logit model file (‘-d’), a hexamer frequency table file (‘-x’)
 and specify the output file name(‘-o’). Gene file could be either in <a class="reference external" href="http://genome.ucsc.edu/FAQ/FAQformat.html#format1.7">BED</a>.
 or <a class="reference external" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format. If in BED format, user also needs to specify reference genome sequence (‘-r’).</p>
@@ -132,9 +144,9 @@ or <a class="reference external" href="http://en.wikipedia.org/wiki/FASTA_format
 <li><p><a class="reference external" href="http://dldcc-web.brc.bcm.edu/lilab/liguow/CGI/cpat/dat/human_test.mRNA.fa">FASTA</a> format file (regular text or compressed)</p></li>
 <li><p>a URL pointing to data that are saved remotely (data could be either BED or FASTA, either regular text or compressed file). <a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a> and <a class="reference external" href="ftp://">ftp://</a> are supported. A remote file cannot be compressed.</p></li>
 </ul>
-</div>
-<div class="section" id="command-line-options">
-<h2>Command line options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="command-line-options">
+<h2>Command line options<a class="headerlink" href="#command-line-options" title="Permalink to this heading">¶</a></h2>
 <dl>
 <dt>Options:</dt><dd><dl class="option-list">
 <dt><kbd><span class="option">--version</span></kbd></dt>
@@ -224,9 +236,9 @@ is printed to screen.</p>
 </dl>
 </dd>
 </dl>
-</div>
-<div class="section" id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
 <p>Use FASTA file as input:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA.fa -o output1
 </pre></div>
@@ -239,9 +251,9 @@ is printed to screen.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cpat.py -x Human_Hexamer.tsv --antisense -d Human_logitModel.RData --top-orf=5 -g Human_test_coding_mRNA_hg19.bed -r hg19.fa -o output3
 </pre></div>
 </div>
-</div>
-<div class="section" id="output-files">
-<h2>output files<a class="headerlink" href="#output-files" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="output-files">
+<h2>output files<a class="headerlink" href="#output-files" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>output.ORF_seqs.fa: The top ORF sequences (at least 75 nucleotides long) in FASTA format.</p></li>
 <li><p>output.ORF_prob.tsv: ORF information (strand, frame, start, end, size, Fickett TESTCODE score, Hexamer score) and coding probability)</p></li>
@@ -250,10 +262,10 @@ is printed to screen.</p>
 <li><p>output.r: Rscript file.</p></li>
 <li><p>CPAT_run_info.log: log file</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="build-hexamer-table">
-<h1>Build hexamer table<a class="headerlink" href="#build-hexamer-table" title="Permalink to this headline">¶</a></h1>
+</section>
+</section>
+<section id="build-hexamer-table">
+<h1>Build hexamer table<a class="headerlink" href="#build-hexamer-table" title="Permalink to this heading">¶</a></h1>
 <p><strong>make_hexamer_tab.py</strong> calculates the in frame hexamer (6mer) frequency from CDS sequence in fasta format. The CDS is mRNA sequence that removes UTR.
 This table is required by CPAT to calculate the hexamer usage score. Users can download prebuilt hexamer tables (Human, Mouse, Fly, Zebrafish) from <a class="reference external" href="https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/">here</a></p>
 <dl>
@@ -292,9 +304,9 @@ CACCCC 0.000328479350276       0.000342582352322
 ...
 </pre></div>
 </div>
-</div>
-<div class="section" id="build-logit-model">
-<h1>Build Logit model<a class="headerlink" href="#build-logit-model" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="build-logit-model">
+<h1>Build Logit model<a class="headerlink" href="#build-logit-model" title="Permalink to this heading">¶</a></h1>
 <p>Build logistic regression model (“prefix.logit.RData”) required by CPAT. This program will output
 3 files:</p>
 <ul class="simple">
@@ -397,14 +409,14 @@ glm.fit: fitted probabilities numerically 0 or 1 occurred
 $ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_hg19.bed -n Human_noncoding_transcripts_hg19.bed  -r /database/hg19.fa  -o Human
 </pre></div>
 </div>
-</div>
-<div class="section" id="use-cpat-to-detect-orf">
-<h1>Use CPAT to detect ORF<a class="headerlink" href="#use-cpat-to-detect-orf" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="use-cpat-to-detect-orf">
+<h1>Use CPAT to detect ORF<a class="headerlink" href="#use-cpat-to-detect-orf" title="Permalink to this heading">¶</a></h1>
 <p>It is perfectly fine to use CPAT to find ORFs. And CPAT will gives exactly the same results as <a class="reference external" href="https://www.ncbi.nlm.nih.gov/orffinder/">NCBI ORFfinder</a></p>
-<div class="section" id="prepare-data">
-<h2>Prepare data<a class="headerlink" href="#prepare-data" title="Permalink to this headline">¶</a></h2>
+<section id="prepare-data">
+<h2>Prepare data<a class="headerlink" href="#prepare-data" title="Permalink to this heading">¶</a></h2>
 <p>Below is the mRNA sequence of protein-coding gene <a class="reference external" href="https://www.genecards.org/cgi-bin/carddisp.pl?gene=UQCR10">UQCR10</a>. Copy and save it as “test.fa”.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">NM_013387</span><span class="o">.</span><span class="mi">4</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span><span class="n">NM_013387</span><span class="mf">.4</span>
 <span class="n">GCGGTGGCGCGAGTTGGACTGTGAAGAAACATGGCGGCCGCGACGTTGAC</span>
 <span class="n">TTCGAAATTGTACTCCCTGCTGTTCCGCAGGACCTCCACCTTCGCCCTCA</span>
 <span class="n">CCATCATCGTGGGCGTCATGTTCTTCGAGCGCGCCTTCGATCAAGGCGCG</span>
@@ -426,9 +438,9 @@ $ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_hg19.bed 
 <span class="n">AAAGTTGAAGAATTTG</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="run-cpat">
-<h2>Run CPAT<a class="headerlink" href="#run-cpat" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="run-cpat">
+<h2>Run CPAT<a class="headerlink" href="#run-cpat" title="Permalink to this heading">¶</a></h2>
 <p>The command to run cpat.py is as below</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cpat.py -x Human_Hexamer.tsv  -d  Human_logitModel.RData  --top-orf=100  --antisense -g test.fa -o output
 </pre></div>
@@ -441,9 +453,9 @@ $ make_logitModel.py  -x Human_Hexamer.tsv -c Human_coding_transcripts_hg19.bed 
 <li><p>The <code class="code docutils literal notranslate"><span class="pre">--min-orf</span></code> is set to 75 by default, same as <a class="reference external" href="https://www.ncbi.nlm.nih.gov/orffinder/">NCBI ORFfinder</a>.</p></li>
 </ul>
 </div>
-</div>
-<div class="section" id="check-the-results">
-<h2>Check the results<a class="headerlink" href="#check-the-results" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="check-the-results">
+<h2>Check the results<a class="headerlink" href="#check-the-results" title="Permalink to this heading">¶</a></h2>
 <p>A total of 8 ORFs were found (sorted by the ORF size, the 7th column). If you copy and paste the same sequence
 to <a class="reference external" href="https://www.ncbi.nlm.nih.gov/orffinder/">NCBI ORFfinder</a> web server, you will get <strong>exactly the same</strong> results.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$more output.ORF_prob.tsv
@@ -461,13 +473,13 @@ NM_013387.4_ORF_8       916     +       3       684     761     78      0.7415  
 <p>CPAT also provides <em>Fickett’s TESTCODE score</em>, <em>Hexamer score</em> and <em>coding probability</em> for each ORF, to help you determine which one is more likely the <em>real</em> ORF.
 For most mRNAs, the largest ORF is also the most likely one, but not always. In this particular example, ORF_4 is the most likely one to code for protein since it has
 the highest coding probability (plese note, ORF_4 is not the largest ORF of NM_013387.4). This can be demonstrated by BLATing the 8 ORF sequences to the reference genome.</p>
-<div class="figure align-default">
+<figure class="align-default">
 <a class="reference internal image-reference" href="_images/UQCR10.jpg"><img alt="_images/UQCR10.jpg" src="_images/UQCR10.jpg" style="width: 500.0px; height: 90.0px;" /></a>
-</div>
-</div>
-</div>
-<div class="section" id="how-to-choose-cutoff">
-<h1>How to choose cutoff<a class="headerlink" href="#how-to-choose-cutoff" title="Permalink to this headline">¶</a></h1>
+</figure>
+</section>
+</section>
+<section id="how-to-choose-cutoff">
+<h1>How to choose cutoff<a class="headerlink" href="#how-to-choose-cutoff" title="Permalink to this heading">¶</a></h1>
 <p><strong>Optimum cutoff were determined from TG-ROC</strong>.</p>
 <ul class="simple">
 <li><p>Human coding probability (CP) cutoff: 0.364 (CP &gt;=0.364 indicates coding sequence, CP &lt; 0.364 indicates noncoding sequence) (see performance figure D)</p></li>
@@ -519,45 +531,45 @@ null device
           1
 </pre></div>
 </div>
-</div>
-<div class="section" id="how-to-prepare-training-dataset">
-<h1>How to prepare training dataset<a class="headerlink" href="#how-to-prepare-training-dataset" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="how-to-prepare-training-dataset">
+<h1>How to prepare training dataset<a class="headerlink" href="#how-to-prepare-training-dataset" title="Permalink to this heading">¶</a></h1>
 <p>We prebuild hexamer tables and logit models for <a class="reference external" href="https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/">human, mouse, fly and zebrafish</a>.
 If you want to run CPAT for other species, you need to prepare your own training data. These two files are required when you run <em>make_hexamer_tab.py</em> and <em>make_logitModel.py</em>.</p>
 <ul class="simple">
 <li><p>It’s better to have balanced training dataset (i.e. the number of coding sequences is roughly equal to the number of noncoding sequences).</p></li>
 <li><p>If the genome of the species you are working on is NOT well annotated and does not have enough “coding” and “noncoding” genes to build the training data, you could build your model using data from other species that is evolutionary close to the species you are working on.</p></li>
 </ul>
-</div>
-<div class="section" id="evaluating-performance">
-<h1>Evaluating Performance<a class="headerlink" href="#evaluating-performance" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="evaluating-performance">
+<h1>Evaluating Performance<a class="headerlink" href="#evaluating-performance" title="Permalink to this heading">¶</a></h1>
 <p>Combinatorial effects of 3 major features. 10,000 coding genes (red dots) and 10,000 noncoding genes (blue dots) are clearly separated into two clusters. (below figure)</p>
-<div class="figure align-default">
+<figure class="align-default">
 <a class="reference internal image-reference" href="_images/Figure_1A_features_3D.png"><img alt="_images/Figure_1A_features_3D.png" src="_images/Figure_1A_features_3D.png" style="width: 600.0px; height: 600.0px;" /></a>
-</div>
+</figure>
 <p>Performance evaluation using 10-fold cross validation (10,000 coding genes and 10,000 noncoding genes). Blue dotted curves represent the
 10-fold cross validations, red solid curve represents the averaged curve between 10 runs of
 validations. (A) ROC curve. (B) PR (precision-recall) curve. (C) Accuracy vs cutoff value.
 (D) Two graphic ROC curve to determine the optimum cutoff value.</p>
-<div class="figure align-default">
+<figure class="align-default">
 <a class="reference internal image-reference" href="_images/CPAT_performance.png"><img alt="_images/CPAT_performance.png" src="_images/CPAT_performance.png" style="width: 600.0px; height: 600.0px;" /></a>
-</div>
-</div>
-<div class="section" id="comparison">
-<h1>Comparison<a class="headerlink" href="#comparison" title="Permalink to this headline">¶</a></h1>
+</figure>
+</section>
+<section id="comparison">
+<h1>Comparison<a class="headerlink" href="#comparison" title="Permalink to this heading">¶</a></h1>
 <p>To compare CPAT with CPC and PhyloCSF, we build an independent testing dataset that composed
 of 4,000 high quality protein coding genes from Refseq annotation and 4,000 lincRNAs from
 Human lincRNA catalog (Cabili et al., 2011). All 8000 genes were not included in the training
 dataset of CPAT.</p>
-<div class="figure align-default">
+<figure class="align-default">
 <a class="reference internal image-reference" href="_images/Figure_4.png"><img alt="_images/Figure_4.png" src="_images/Figure_4.png" style="width: 600.0px; height: 600.0px;" /></a>
-</div>
-<div class="figure align-default">
+</figure>
+<figure class="align-default">
 <a class="reference internal image-reference" href="_images/Figure_S2.png"><img alt="_images/Figure_S2.png" src="_images/Figure_S2.png" style="width: 600.0px; height: 600.0px;" /></a>
-</div>
-</div>
-<div class="section" id="license">
-<h1>LICENSE<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
+</figure>
+</section>
+<section id="license">
+<h1>LICENSE<a class="headerlink" href="#license" title="Permalink to this heading">¶</a></h1>
 <p>CPAT is distributed under <a class="reference external" href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a></p>
 <p>This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
@@ -569,18 +581,18 @@ General Public License for more details. You should have received a copy of the 
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 02110-1301 USA</p>
-</div>
-<div class="section" id="reference">
-<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="reference">
+<h1>Reference<a class="headerlink" href="#reference" title="Permalink to this heading">¶</a></h1>
 <p>Wang, L., Park, H. J., Dasari, S., Wang, S., Kocher, J.-P., &amp; Li, W. (2013). CPAT: Coding-Potential Assessment Tool using an alignment-free logistic regression model. Nucleic Acids Research, 41(6), e74. <a class="reference external" href="http://nar.oxfordjournals.org/content/41/6/e74">doi:10.1093/nar/gkt006</a></p>
-</div>
-<div class="section" id="contact">
-<h1>Contact<a class="headerlink" href="#contact" title="Permalink to this headline">¶</a></h1>
+</section>
+<section id="contact">
+<h1>Contact<a class="headerlink" href="#contact" title="Permalink to this heading">¶</a></h1>
 <ul class="simple">
 <li><p>Liguo Wang: wang.liguo AT mayo.edu</p></li>
 <li><p>Wei Li: wei.li AT uci.edu</p></li>
 </ul>
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -589,8 +601,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="#">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Release history</a></li>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
@@ -623,6 +636,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 <li><a class="reference internal" href="#contact">Contact</a></li>
 </ul>
 
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -634,12 +648,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -655,8 +669,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2020, Liguo Wang.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
+    &#169; Copyright 2020, Liguo Wang.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
   </body>
 </html>

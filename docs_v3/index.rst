@@ -19,6 +19,22 @@
 Release history
 ================
 
+**CPAT v3.0.5** (01/24/2024)
+
+Use "pyproject.toml" to replace "setup.py".
+
+.. Note::
+   ``cpat.py`` is now renamed to ``cpat``,
+   ``make_hexamer_tab.py`` is renamed to ``make_hexamer_tab``,
+   ``make_logitModel.py`` is renamed to ``make_logitModel``.
+   To ensure compatibility with the previous pipelines, please add the following lines into your ~/.bashrc file.
+
+.. code-block:: bash
+
+   alias cpat.py='cpat'
+   alias make_hexamer_tab.py='make_hexamer_tab'
+   alias make_logitModel.py='make_logitModel'
+
 **CPAT v3.0.4** (05/26/2021)
 
 Fix bug to read remote file for Python3.  
