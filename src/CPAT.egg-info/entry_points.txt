@@ -1,0 +1,4 @@
+[console_scripts]
+cpat = cpmodule:cpat
+make_hexamer_tab = cpmodule:make_hexamer_tab
+make_logitModel = cpmodule:make_logitModel

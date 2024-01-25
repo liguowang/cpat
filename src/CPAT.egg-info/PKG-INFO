@@ -1,0 +1,52 @@
+Metadata-Version: 2.1
+Name: CPAT
+Version: 3.0.5
+Summary: CPAT (Coding Potential Assessment Tool).
+Author-email: Liguo Wang <wangliguo78@gmail.com>
+Maintainer-email: Liguo Wang <wangliguo78@gmail.com>
+License: CPAT is distributed under GNU General Public License
+        
+        This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+        
+Project-URL: Documentation, https://cpat.readthedocs.io/en/latest/
+Project-URL: Repository, https://github.com/liguowang/cpat
+Project-URL: Issues, https://github.com/liguowang/cpat/issues
+Project-URL: Webserver, https://wlcb.oit.uci.edu/cpat
+Keywords: RNA,lncRNA,lincRNA,coding potential
+Classifier: Programming Language :: Python :: 3
+Classifier: Development Status :: 5 - Production
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Science/Research
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: POSIX
+Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
+Requires-Python: >=3.8
+Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
+Requires-Dist: pysam
+Requires-Dist: numpy
+
+Installation
+==================
+
+Use pip to install CPAT
+-----------------------------
+
+::
+
+ pip3 install git+https://github.com/liguowang/cpat.git
+ 
+ or 
+ 
+ pip3 install CPAT
+
+Documentation
+=============
+
+* https://cpat.readthedocs.io/en/latest/ (CPAT version v3.0)
+
+Web server
+==========
+
+* https://wlcb.oit.uci.edu/cpat/
