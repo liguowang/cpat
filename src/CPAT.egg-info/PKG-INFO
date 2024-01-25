@@ -14,7 +14,7 @@ Project-URL: Issues, https://github.com/liguowang/cpat/issues
 Project-URL: Webserver, https://wlcb.oit.uci.edu/cpat
 Keywords: RNA,lncRNA,lincRNA,coding potential
 Classifier: Programming Language :: Python :: 3
-Classifier: Development Status :: 5 - Production
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Environment :: Console
 Classifier: Intended Audience :: Science/Research
