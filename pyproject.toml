@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "CPAT"
+version = "3.0.5"
+authors = [
+  {name="Liguo Wang", email="wangliguo78@gmail.com"},
+]
+maintainers = [
+  {name = "Liguo Wang", email = "wangliguo78@gmail.com"}
+]
+description = "CPAT (Coding Potential Assessment Tool)."
+readme = "README.rst"
+license = {file = "LICENSE.txt"}
+requires-python = ">=3.8"
+dependencies = [
+  'pysam',
+  'numpy',
+]
+classifiers=[
+        "Programming Language :: Python :: 3",
+        'Development Status :: 5 - Production',
+        "License :: OSI Approved :: MIT License",
+        'Environment :: Console',
+        'Intended Audience :: Science/Research',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
+]
+
+keywords = ["RNA", "lncRNA", "lincRNA", "coding potential"]
+
+[project.scripts]
+cpat = "cpmodule:cpat"
+make_hexamer_tab = "cpmodule:make_hexamer_tab"
+make_logitModel = "cpmodule:make_logitModel"
+
+[project.urls]
+Documentation = "https://cpat.readthedocs.io/en/latest/"
+Repository = "https://github.com/liguowang/cpat"
+Issues = "https://github.com/liguowang/cpat/issues"
+Webserver = "https://wlcb.oit.uci.edu/cpat"
