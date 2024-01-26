@@ -19,7 +19,8 @@
 Release history
 ================
 
-**CPAT v3.0.5** (01/24/2024)
+CPAT v3.0.5 (01/24/2024)
+------------------------
 
 Use "pyproject.toml" to replace "setup.py".
 
@@ -36,22 +37,27 @@ Use "pyproject.toml" to replace "setup.py".
    alias make_logitModel.py='make_logitModel'
 
 **CPAT v3.0.4** (05/26/2021)
+-----------------------------
 
 Fix bug to read remote file for Python3.  
 
 **CPAT v3.0.3** (03/08/2021)
+----------------------------
 
 Update "cpat.py" to handle alternative start codens. 
 
 **CPAT v3.0.2** (08/17/2020)
+----------------------------
 
 Update "make_logitModel.py" to make it compatible with "cpat.py".
 
 **CPAT v3.0.1**
+---------------
 
 Minor bug fixed regarding the output format. 
 
 **CPAT v3.0.0**
+----------------
 
 For many transcripts, the longest ORF may not be the real ORF. For example, in human genome,
 the 2nd longest ORF of NM_198086 is the real ORF, and the 3rd longest ORF of NM_030915 is the
@@ -100,7 +106,7 @@ install CPAT using pip3
 
 
 .. note::
-   * User need to download prebuilt `logit model and hexamer table  <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/>`_ for human, mouse, zebrafish and fly. For other species, we provide scripts to build these models (see below).
+   * User need to download prebuilt `logit model and hexamer table  <https://sourceforge.net/projects/rna-cpat/files/prebuilt_models/>`_ for human, mouse, zebrafish and fly. For other species, we provide scripts to build these models (see below).
 
 
 Run CPAT online
@@ -253,7 +259,7 @@ Output
 Build your own hexamer table
 ============================
 ``make_hexamer_tab`` calculates the in frame hexamer (6mer) frequency from `CDS <https://en.wikipedia.org/wiki/Coding_region>`_ sequence in fasta format. A `CDS <https://en.wikipedia.org/wiki/Coding_region>`_ is an mRNA sequence without the 3' `UTR <https://en.wikipedia.org/wiki/Untranslated_region>`_ and 5' `UTR <https://en.wikipedia.org/wiki/Untranslated_region>`_ regions.
-This table is required by ``cpat`` to calculate the hexamer usage score. Users can download prebuilt hexamer tables (Human, Mouse, Fly, Zebrafish) from `here <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/>`_.
+This table is required by ``cpat`` to calculate the hexamer usage score. Users can download prebuilt hexamer tables (Human, Mouse, Fly, Zebrafish) from `here <https://sourceforge.net/projects/rna-cpat/files/prebuilt_models/>`_.
 
 
 Usage
@@ -279,8 +285,8 @@ Example
 
 First, download these two files:
 
- * Coding CDS sequences in FASTA format: `Human_coding_transcripts_CDS.fa.gz <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/test/Human_coding_transcripts_CDS.fa.gz>`_
- * Noncoding sequences in FASTA format: `Human_noncoding_transcripts_RNA.fa.gz <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/test/Human_noncoding_transcripts_RNA.fa.gz>`_
+ * Coding CDS sequences: `Human_coding_transcripts_CDS.fa.gz <https://sourceforge.net/projects/rna-cpat/files/test_files/Human_coding_transcripts_CDS.fa.gz>`_
+ * Noncoding sequences: `Human_noncoding_transcripts_RNA.fa.gz <https://sourceforge.net/projects/rna-cpat/files/test_files/Human_noncoding_transcripts_RNA.fa.gz>`_
 
 Then, run:
 
@@ -314,7 +320,7 @@ Build logistic regression model ("prefix.logit.RData") required by ``cpat``. Thi
 * prefix.logit.RData: logit model required by CPAT (if R was installed).
 * prefix.make_logitModel.r: R script to build the above logit model.
 
-Note: Users can download `prebuilt logit models <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model>`_ for Human, Mouse, Fly and Zebrafish.
+Note: Users can download `prebuilt logit models <https://sourceforge.net/projects/rna-cpat/files/prebuilt_models/>`_ for Human, Mouse, Fly and Zebrafish.
 
 Usage
 ------
@@ -492,19 +498,24 @@ How to choose cutoff
 **Optimum cutoffs were determined from TG-ROC**. For example, in human, coding probability (CP) cutoff >=0.364 indicates coding sequence, CP < 0.364 indicates noncoding sequence.
 
 .. list-table:: Optimum cutoffs
-   :widths: 75 60
+   :widths: 35 35 35
    :header-rows: 1
 
    * - Species
-     - Coding probability threshold
+     - CP threshold
+     - Sensitivity & Specificity
    * - Human (*Homo sapiens*)
      - 0.364
+     - 0.966
    * - Mouse (*Mus musculus*)
      - 0.44
+     - 0.955
    * - Fly (*Drosophila melanogaster*)
      - 0.39
+     - 0.963
    * - Zebrafish (*Danio rerio*)
      - 0.38     
+     - 0.984
 
 **Here we provide the R code and the data that we used to generate** `Figure 3 <http://nar.oxfordjournals.org/content/41/6/e74/F3.expansion.html>`_ **in our paper**. **Note the** `ROCR <http://cran.r-project.org/web/packages/ROCR/index.html>`_ **library is required to run our R code**. 
 
@@ -560,7 +571,7 @@ How to choose cutoff
 How to prepare training dataset
 ==================================
 
-We prebuild hexamer tables and logit models for `human, mouse, fly and zebrafish <https://sourceforge.net/projects/rna-cpat/files/v1.2.2/prebuilt_model/>`_.
+We prebuild hexamer tables and logit models for `human, mouse, fly and zebrafish <https://sourceforge.net/projects/rna-cpat/files/prebuilt_models/>`_.
 If you want to run CPAT for other species, you need to prepare your own training data.
 
  * Optimal training datasets exhibit balance, where the count of coding sequences is approximately equal to that of noncoding sequences.
