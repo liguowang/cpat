@@ -32,9 +32,9 @@ Use "pyproject.toml" to replace "setup.py".
 
 .. code-block:: bash
 
-   alias cpat.py='cpat'
-   alias make_hexamer_tab.py='make_hexamer_tab'
-   alias make_logitModel.py='make_logitModel'
+   alias cpat='cpat.py'
+   alias make_hexamer_tab='make_hexamer_tab.py'
+   alias make_logitModel='make_logitModel.py'
 
 **CPAT v3.0.4** (05/26/2021)
 -----------------------------
